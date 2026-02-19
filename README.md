@@ -24,26 +24,24 @@ This project extends the Bonham & Stefan (2017) analysis of gender representatio
 
 ```
 ├── README.md
+├── CHANGELOG.md                 # Release notes and version history
 ├── requirements.txt
 ├── .gitignore
 │
-├── data/
-│   ├── raw/                     # Raw API outputs (gitignored)
-│   ├── processed/               # Cleaned CSVs for analysis
-│   └── gender_cache.json        # Cached name → gender lookups
+├── pipeline.py                  # Main analysis pipeline (replaces notebooks)
+├── run_gender_inference_db.py   # Gender inference with SQLite backend
 │
-├── notebooks/
-│   ├── 01_pubmed_fetch.ipynb    # Fetch PubMed data
-│   ├── 02_arxiv_fetch.ipynb     # Fetch arXiv data
-│   ├── 03_gender_inference.ipynb # Infer gender from names
-│   ├── 04_analysis.ipynb        # Bootstrap analysis & stats
-│   └── 05_figures.ipynb         # Generate publication figures
+├── data/
+│   ├── processed/               # CSV files from PubMed/arXiv fetches
+│   ├── gender_data.db           # SQLite database (gender inferred data)
+│   └── gender_cache.json        # Cached name → gender lookups
 │
 ├── src/
 │   ├── __init__.py
 │   ├── pubmed_fetcher.py        # PubMed API wrapper
 │   ├── arxiv_fetcher.py         # arXiv API wrapper
 │   ├── gender_utils.py          # Gender inference logic
+│   ├── db_utils.py              # SQLite database operations
 │   ├── bootstrap.py             # Statistical analysis
 │   └── plotting.py              # Figure generation
 │
@@ -77,13 +75,68 @@ export NCBI_API_KEY="your_api_key_here"
 ```
 
 ### 4. Run the Analysis Pipeline
-Follow the notebooks in order:
 
-1. `notebooks/01_pubmed_fetch.ipynb` — Fetch PubMed data for Biology and Computational Biology
-2. `notebooks/02_arxiv_fetch.ipynb` — Fetch arXiv data for quantitative biology and computer science
-3. `notebooks/03_gender_inference.ipynb` — Infer gender from author first names
-4. `notebooks/04_analysis.ipynb` — Run bootstrap analysis and generate statistics
-5. `notebooks/05_figures.ipynb` — Create publication-ready figures
+The pipeline is now implemented as a single Python script with modular steps:
+
+```bash
+# Option 1: Full pipeline (fetch + inference + analysis + figures)
+python pipeline.py
+
+# Option 2: Skip fetching (use cached data)
+python pipeline.py --skip-fetch
+
+# Option 3: Generate figures only (from existing analysis results)
+python pipeline.py --figures-only
+```
+
+**Behind the scenes:**
+1. **Step 1:** Fetch PubMed data for Biology and Computational Biology
+2. **Step 2:** Fetch arXiv data for quantitative biology and computer science
+3. **Step 3:** Gender inference (using `run_gender_inference_db.py`)
+4. **Step 4:** Bootstrap statistical analysis
+5. **Step 5:** Generate publication-ready figures
+
+**For gender inference only (if you want to rerun just that step):**
+```bash
+python run_gender_inference_db.py
+```
+
+This populates the SQLite database at `data/gender_data.db`.
+
+## Architecture: SQLite Database Approach
+
+As of February 2026, the project uses a **SQLite database** for efficient storage and querying of gender-inferred author data, replacing the previous CSV-based approach. This provides significant benefits:
+
+### Database Schema
+
+The `data/gender_data.db` SQLite database contains three tables:
+
+- **papers:** Paper metadata (pmid/arxiv_id, title, year, dataset)
+- **authors:** Author gender inferences (name, p_female, gender, source)
+- **author_positions:** Paper-author relationships with position information (paper_id, author_id, position)
+
+### Benefits of This Approach
+
+| Aspect | CSV Files | SQLite Database |
+|---|---|---|
+| **Storage** | ~1.2–1.5 GB | ~300–500 MB (60–75% smaller) |
+| **Memory** | Load entire file (slow) | Query only needed data (fast) |
+| **Speed** | Full scan required | Indexed queries |
+| **Scalability** | Limited | Better for future additions |
+| **Indexing** | None | Proper indices on key fields |
+
+### Gender Inference with SQLite
+
+The `run_gender_inference_db.py` script:
+1. Loads paper data from fetched CSVs
+2. Identifies all unique author names
+3. Infers gender for each author (cached to avoid redundant API calls)
+4. Populates the SQLite database with author data and position relationships
+
+This approach is more efficient than the previous CSV expansion because:
+- Authors are stored once (normalization)
+- Repeated lookups don't require reprocessing
+- Analysis queries can use indices for fast filtering
 
 ## Methodology
 
