@@ -80,12 +80,13 @@ class PubMedFetcher:
         Execute a PubMed search and return all matching PMIDs.
 
         Uses WebEnv and WebHistory for efficient batch searching.
+        NOTE: NCBI limits ESearch to first 9,999 records per query.
 
         Args:
             query: PubMed search query
 
         Returns:
-            List of PMIDs
+            List of PMIDs (max 9,999 due to NCBI limitations)
         """
         print(f"Searching PubMed: {query[:80]}...")
 
@@ -109,9 +110,16 @@ class PubMedFetcher:
             if count == 0:
                 return []
 
+            # NCBI ESearch limitation: can only retrieve first 9,999 records
+            max_retrievable = 9999
+            if count > max_retrievable:
+                print(f"⚠️  WARNING: PubMed returned {count} papers, but ESearch can only retrieve {max_retrievable}.")
+                print(f"   Fetching first {max_retrievable} papers only.")
+                count = max_retrievable
+
             # Fetch all PMIDs in batches using WebEnv
             pmids = []
-            batch_size = 10000  # Fetch up to 10k at a time
+            batch_size = 10000  # Fetch up to 10k at a time (but won't exceed 9999 total due to cap above)
             for start in range(0, count, batch_size):
                 print(f"  Fetching PMIDs {start + 1} to {min(start + batch_size, count)}...")
 
@@ -121,7 +129,7 @@ class PubMedFetcher:
                     webenv=web_env,
                     query_key=query_key,
                     retstart=start,
-                    retmax=batch_size
+                    retmax=min(batch_size, count - start)  # Don't exceed remaining count
                 )
                 fetch_results = Entrez.read(fetch_handle)
                 fetch_handle.close()
@@ -129,6 +137,7 @@ class PubMedFetcher:
                 pmids.extend(fetch_results["IdList"])
                 time.sleep(0.1)  # Small delay to respect rate limits
 
+            print(f"Successfully retrieved {len(pmids)} PMIDs")
             return pmids
 
         except Exception as e:
