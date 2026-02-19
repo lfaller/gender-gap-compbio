@@ -13,17 +13,17 @@ from tqdm import tqdm
 class arXivFetcher:
     """Fetches preprints from arXiv API."""
 
-    def __init__(self, delay_seconds: float = 3.0):
+    def __init__(self, delay_seconds: float = 5.0):
         """
         Initialize arXiv fetcher.
 
         Args:
-            delay_seconds: Delay between API requests (default 3.0)
+            delay_seconds: Delay between API requests (default 5.0 - arXiv recommends 3+ seconds)
         """
         self.client = arxiv.Client(
             page_size=1000,
             delay_seconds=delay_seconds,
-            num_retries=5
+            num_retries=10  # More aggressive retries
         )
 
     def fetch_quantitative_biology(self, start_year: int = 2015, end_year: int = 2024) -> List[Dict]:
@@ -76,37 +76,48 @@ class arXivFetcher:
 
         print(f"Fetching {category} preprints ({start_year}-{end_year})...")
         print("Note: This may take several minutes due to API rate limiting...")
+        print("(If this times out, arXiv may be busy - try again later)\n")
 
-        # Search for all papers in category from start_year to end_year
-        search = arxiv.Search(
-            query=f"cat:{category}",
-            max_results=None,
-            sort_by=arxiv.SortCriterion.SubmittedDate
-        )
+        try:
+            # Search for all papers in category from start_year to end_year
+            search = arxiv.Search(
+                query=f"cat:{category}",
+                max_results=None,
+                sort_by=arxiv.SortCriterion.SubmittedDate
+            )
 
-        for result in tqdm(self.client.results(search), desc=f"Fetching {category}"):
-            # Filter by year
-            year = result.published.year
-            if year < start_year or year > end_year:
-                continue
+            count = 0
+            for result in tqdm(self.client.results(search), desc=f"Fetching {category}"):
+                # Filter by year
+                year = result.published.year
+                if year < start_year or year > end_year:
+                    continue
 
-            # Extract authors
-            authors = [str(author) for author in result.authors]
+                # Extract authors
+                authors = [str(author) for author in result.authors]
 
-            preprint = {
-                "arxiv_id": result.entry_id.split("/abs/")[-1],
-                "title": result.title,
-                "year": year,
-                "published_date": result.published,
-                "authors": authors,
-                "author_count": len(authors),
-                "category": category,
-                "positions": []  # Will be filled by notebook
-            }
-            preprints.append(preprint)
+                preprint = {
+                    "arxiv_id": result.entry_id.split("/abs/")[-1],
+                    "title": result.title,
+                    "year": year,
+                    "published_date": result.published,
+                    "authors": authors,
+                    "author_count": len(authors),
+                    "category": category,
+                    "positions": []  # Will be filled by pipeline
+                }
+                preprints.append(preprint)
+                count += 1
 
-        print(f"Fetched {len(preprints)} {category} preprints")
-        return preprints
+            print(f"✓ Fetched {len(preprints)} {category} preprints\n")
+            return preprints
+
+        except Exception as e:
+            print(f"⚠️  Error fetching {category} preprints: {e}")
+            print(f"   Fetched {len(preprints)} preprints before error")
+            print(f"   arXiv may be rate-limited or temporarily unavailable")
+            print(f"   Try running again with --skip-fetch to use cached data if available\n")
+            return preprints
 
     def _parse_arxiv_authors(self, authors: List) -> List[str]:
         """
