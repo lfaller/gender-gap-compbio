@@ -157,8 +157,16 @@ def step3_gender_inference():
     print(f"✓ Processed {len(pubmed_author_df)} PubMed author records\n")
 
     print("Processing arXiv authors...")
-    arxiv_author_df = expand_author_positions(arxiv_df)
-    arxiv_author_df = infer_gender_batch(gi, arxiv_author_df)
+
+    # Handle empty arXiv data gracefully
+    if len(arxiv_df) == 0:
+        print("⚠️  No arXiv data to process (fetch returned 0 preprints)")
+        print("   Creating empty arXiv dataset with correct schema...")
+        arxiv_author_df = pd.DataFrame(columns=["pmid", "year", "dataset", "author", "position", "p_female", "gender", "source"])
+    else:
+        arxiv_author_df = expand_author_positions(arxiv_df)
+        arxiv_author_df = infer_gender_batch(gi, arxiv_author_df)
+
     arxiv_author_df.to_csv("data/processed/arxiv_authors_with_gender.csv", index=False)
     print(f"✓ Processed {len(arxiv_author_df)} arXiv author records\n")
 
@@ -209,16 +217,21 @@ def step4_analysis():
 
     # Analysis 3: arXiv comparison
     print("Analysis 3: arXiv Comparison (q-bio vs. cs)...")
-    arxiv_position_results = bootstrap_by_multiple_groups(
-        arxiv_df,
-        group_cols=["dataset", "position"],
-        prob_col="p_female",
-        n_iterations=1000,
-    )
+    if len(arxiv_df) == 0:
+        print("⚠️  No arXiv data available (fetch returned 0 preprints)")
+        arxiv_position_results = pd.DataFrame()  # Empty results
+    else:
+        arxiv_position_results = bootstrap_by_multiple_groups(
+            arxiv_df,
+            group_cols=["dataset", "position"],
+            prob_col="p_female",
+            n_iterations=1000,
+        )
+        print(arxiv_position_results.to_string())
+
     arxiv_position_results.to_csv(
         "data/processed/analysis_arxiv_position.csv", index=False
     )
-    print(arxiv_position_results.to_string())
     print()
 
     # Analysis 4: COVID-19 impact
