@@ -18,17 +18,17 @@ def bootstrap_pfemale(
 
     Given a list of P_female values (0.0–1.0) for a set of authors,
     returns (mean_pfemale, ci_lower, ci_upper) via bootstrap.
-    Excludes None (unknown) values.
+    Excludes None and NaN (unknown) values.
 
     Args:
-        probabilities: List of P_female values in [0.0, 1.0] or None for unknown
+        probabilities: List of P_female values in [0.0, 1.0] or None/NaN for unknown
         n_iterations: Number of bootstrap iterations (default 1000)
 
     Returns:
         Tuple of (mean, ci_lower, ci_upper) or (None, None, None) if empty
     """
-    # Filter out None values
-    probs = [p for p in probabilities if p is not None]
+    # Filter out None and NaN values
+    probs = [p for p in probabilities if p is not None and not (isinstance(p, float) and np.isnan(p))]
 
     if not probs:
         return (None, None, None)

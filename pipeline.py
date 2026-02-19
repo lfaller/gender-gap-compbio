@@ -12,6 +12,7 @@ This script runs the complete analysis pipeline:
 Usage:
     python pipeline.py                    # Run full pipeline
     python pipeline.py --skip-fetch       # Skip data fetching (use cached data)
+    python pipeline.py --figures-only     # Skip fetch & inference, run analysis & figures
     python pipeline.py --help             # Show options
 """
 
@@ -25,6 +26,7 @@ from dotenv import load_dotenv
 from src.pubmed_fetcher import PubMedFetcher
 from src.arxiv_fetcher import arXivFetcher
 from src.gender_utils import GenderInference, assign_positions
+from src.db_utils import GenderDatabase
 from src.bootstrap import bootstrap_by_multiple_groups, bootstrap_pfemale
 from src.plotting import (
     plot_pfemale_by_position,
@@ -132,50 +134,27 @@ def step2_fetch_arxiv(skip_fetch=False):
 
 
 def step3_gender_inference():
-    """Step 3: Infer gender from author names."""
+    """Step 3: Infer gender from author names (stored in SQLite database)."""
     print("\n" + "="*70)
-    print("STEP 3: Gender Inference")
+    print("STEP 3: Gender Inference (SQLite Database)")
     print("="*70)
 
-    gi = GenderInference(cache_path="data/gender_cache.json")
-    print(f"Loaded cache with {len(gi.cache)} entries\n")
+    # Check if database already exists
+    db_path = Path("data/gender_data.db")
+    if db_path.exists():
+        print("✓ Database already exists, loading cached results...")
+        db = GenderDatabase(db_path="data/gender_data.db")
+        pubmed_author_df = db.get_data_by_year_and_dataset(2000, 2100)
+        print(f"  Loaded {db.count_papers():,} papers")
+        print(f"  Loaded {db.count_unique_authors():,} unique authors")
+        print(f"  Loaded {db.count_author_positions():,} author positions\n")
+        db.close()
+        return pubmed_author_df, pubmed_author_df
 
-    # Load all datasets
-    bio_df = pd.read_csv("data/processed/pubmed_biology_2015_2024.csv")
-    comp_df = pd.read_csv("data/processed/pubmed_compbio_2015_2024.csv")
-    qbio_df = pd.read_csv("data/processed/arxiv_qbio_2015_2024.csv")
-    cs_df = pd.read_csv("data/processed/arxiv_cs_2015_2024.csv")
-
-    pubmed_df = pd.concat([bio_df, comp_df], ignore_index=True)
-    arxiv_df = pd.concat([qbio_df, cs_df], ignore_index=True)
-
-    # Expand to author-position level and infer gender
-    print("Processing PubMed authors...")
-    pubmed_author_df = expand_author_positions(pubmed_df)
-    pubmed_author_df = infer_gender_batch(gi, pubmed_author_df)
-    pubmed_author_df.to_csv("data/processed/pubmed_authors_with_gender.csv", index=False)
-    print(f"✓ Processed {len(pubmed_author_df)} PubMed author records\n")
-
-    print("Processing arXiv authors...")
-
-    # Handle empty arXiv data gracefully
-    if len(arxiv_df) == 0:
-        print("⚠️  No arXiv data to process (fetch returned 0 preprints)")
-        print("   Creating empty arXiv dataset with correct schema...")
-        arxiv_author_df = pd.DataFrame(columns=["pmid", "year", "dataset", "author", "position", "p_female", "gender", "source"])
-    else:
-        arxiv_author_df = expand_author_positions(arxiv_df)
-        arxiv_author_df = infer_gender_batch(gi, arxiv_author_df)
-
-    arxiv_author_df.to_csv("data/processed/arxiv_authors_with_gender.csv", index=False)
-    print(f"✓ Processed {len(arxiv_author_df)} arXiv author records\n")
-
-    # Save cache
-    print(f"Saving gender cache ({len(gi.cache)} entries)...")
-    gi.save_cache()
-    print("✓ Cache saved\n")
-
-    return pubmed_author_df, arxiv_author_df
+    print("Database not found. Please run: python run_gender_inference_db.py")
+    print("\nThis script generates gender inference and populates the database.")
+    print("=" * 70)
+    sys.exit(1)
 
 
 def step4_analysis():
@@ -184,13 +163,18 @@ def step4_analysis():
     print("STEP 4: Statistical Analysis")
     print("="*70)
 
-    pubmed_df = pd.read_csv("data/processed/pubmed_authors_with_gender.csv")
-    arxiv_df = pd.read_csv("data/processed/arxiv_authors_with_gender.csv")
+    # Load data from SQLite database
+    db = GenderDatabase(db_path="data/gender_data.db")
+    pubmed_df = db.get_author_data_as_dataframe()
+    db.close()
 
     # Filter PubMed data (2015-2024)
     pubmed_2015_2024 = pubmed_df[
         (pubmed_df["year"] >= 2015) & (pubmed_df["year"] <= 2024)
     ]
+
+    # Separate by dataset
+    arxiv_df = pubmed_df[pubmed_df["dataset"].isin(["q-bio", "cs"])]
 
     # Analysis 1: Position breakdown
     print("Analysis 1: P_female by Author Position...")
@@ -310,21 +294,24 @@ def step5_figures(position_results, temporal_results, arxiv_position_results, co
     print("✓ Saved Figure 2\n")
 
     # Figure 3: arXiv comparison
-    print("Generating Figure 3: arXiv comparison...")
-    fig, ax = plot_pfemale_by_position(
-        arxiv_position_results,
-        group_col="dataset",
-        output_path=f"{output_dir}/fig4_arxiv_comparison.png",
-        figsize=(10, 6),
-    )
-    plt.savefig(
-        f"{output_dir}/fig4_arxiv_comparison.svg",
-        dpi=300,
-        bbox_inches="tight",
-        format="svg",
-    )
-    plt.close()
-    print("✓ Saved Figure 3\n")
+    if len(arxiv_position_results) > 0:
+        print("Generating Figure 3: arXiv comparison...")
+        fig, ax = plot_pfemale_by_position(
+            arxiv_position_results,
+            group_col="dataset",
+            output_path=f"{output_dir}/fig4_arxiv_comparison.png",
+            figsize=(10, 6),
+        )
+        plt.savefig(
+            f"{output_dir}/fig4_arxiv_comparison.svg",
+            dpi=300,
+            bbox_inches="tight",
+            format="svg",
+        )
+        plt.close()
+        print("✓ Saved Figure 3\n")
+    else:
+        print("⊘ Skipping Figure 3: No arXiv data available\n")
 
     # Figure 4: COVID-19 impact
     print("Generating Figure 4: COVID-19 impact...")
@@ -415,7 +402,20 @@ def infer_gender_batch(gi, df):
         result = gi.infer_gender(first_name)
         author_to_gender[author] = result
 
-    df["p_female"] = df["author"].map(lambda x: author_to_gender[x]["probability"])
+    # Convert gender inference results to p_female
+    # For females: p_female = probability (confidence in female classification)
+    # For males: p_female = 1 - probability (inverse of confidence in male classification)
+    # For unknown: p_female = NaN
+    def get_p_female(author):
+        result = author_to_gender[author]
+        if result["gender"] == "female":
+            return result["probability"]
+        elif result["gender"] == "male":
+            return 1 - result["probability"] if result["probability"] is not None else None
+        else:  # unknown
+            return None
+
+    df["p_female"] = df["author"].map(get_p_female)
     df["gender"] = df["author"].map(lambda x: author_to_gender[x]["gender"])
     df["source"] = df["author"].map(lambda x: author_to_gender[x]["source"])
 
@@ -432,6 +432,11 @@ def main():
         action="store_true",
         help="Skip data fetching (use cached data)",
     )
+    parser.add_argument(
+        "--figures-only",
+        action="store_true",
+        help="Only generate figures (from existing analysis results)",
+    )
     args = parser.parse_args()
 
     print("\n" + "="*70)
@@ -441,16 +446,20 @@ def main():
     try:
         setup_directories()
 
-        # Step 1: Fetch PubMed
-        bio_df, comp_df = step1_fetch_pubmed(skip_fetch=args.skip_fetch)
+        if args.figures_only:
+            # Skip fetch and inference; run analysis and figures
+            print("\n⊘ Figures-only mode: Skipping fetch & inference...")
+        else:
+            # Step 1: Fetch PubMed
+            bio_df, comp_df = step1_fetch_pubmed(skip_fetch=args.skip_fetch)
 
-        # Step 2: Fetch arXiv
-        qbio_df, cs_df = step2_fetch_arxiv(skip_fetch=args.skip_fetch)
+            # Step 2: Fetch arXiv
+            qbio_df, cs_df = step2_fetch_arxiv(skip_fetch=args.skip_fetch)
 
-        # Step 3: Gender inference
-        pubmed_author_df, arxiv_author_df = step3_gender_inference()
+            # Step 3: Gender inference
+            pubmed_author_df, arxiv_author_df = step3_gender_inference()
 
-        # Step 4: Analysis
+        # Step 4: Analysis (always run unless analysis results already exist)
         (
             position_results,
             temporal_results,
