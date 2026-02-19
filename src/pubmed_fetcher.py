@@ -37,6 +37,8 @@ class PubMedFetcher:
         """
         Search for Biology papers on PubMed.
 
+        Splits search by year to overcome 9,999 record limit per query.
+
         Args:
             start_year: Start year for search (default 2015)
             end_year: End year for search (default 2024)
@@ -44,20 +46,18 @@ class PubMedFetcher:
         Returns:
             List of PMIDs matching the query
         """
-        query = (
-            '"Biology"[Mesh] NOT ('
-            'Review[ptyp] OR Comment[ptyp] OR Editorial[ptyp] OR '
-            'Letter[ptyp] OR "Case Reports"[ptyp] OR News[ptyp] OR '
-            '"Biography"[Publication Type]) '
-            f'AND ("{start_year}/01/01"[PDAT]: "{end_year}/12/31"[PDAT]) '
-            'AND english[language]'
+        return self._search_by_year_range(
+            mesh_term='"Biology"[Mesh]',
+            start_year=start_year,
+            end_year=end_year
         )
-        return self._search_pmids(query)
 
     def search_computational_biology(self, start_year: int = 2015, end_year: int = 2024) -> List[str]:
         """
         Search for Computational Biology papers on PubMed.
 
+        Splits search by year to overcome 9,999 record limit per query.
+
         Args:
             start_year: Start year for search (default 2015)
             end_year: End year for search (default 2024)
@@ -65,83 +65,90 @@ class PubMedFetcher:
         Returns:
             List of PMIDs matching the query
         """
-        query = (
-            '"Computational Biology"[Majr] NOT ('
-            'Review[ptyp] OR Comment[ptyp] OR Editorial[ptyp] OR '
-            'Letter[ptyp] OR "Case Reports"[ptyp] OR News[ptyp] OR '
-            '"Biography"[Publication Type]) '
-            f'AND ("{start_year}/01/01"[PDAT]: "{end_year}/12/31"[PDAT]) '
-            'AND english[language]'
+        return self._search_by_year_range(
+            mesh_term='"Computational Biology"[Majr]',
+            start_year=start_year,
+            end_year=end_year
         )
-        return self._search_pmids(query)
 
-    def _search_pmids(self, query: str) -> List[str]:
+    def _search_by_year_range(self, mesh_term: str, start_year: int, end_year: int) -> List[str]:
         """
-        Execute a PubMed search and return all matching PMIDs.
+        Search for papers year-by-year to overcome 9,999 record limit.
 
-        Uses WebEnv and WebHistory for efficient batch searching.
-        NOTE: NCBI limits ESearch to first 9,999 records per query.
+        Splits the search into individual year queries and combines results.
+
+        Args:
+            mesh_term: MeSH term (e.g., '"Biology"[Mesh]' or '"Computational Biology"[Majr]')
+            start_year: Start year
+            end_year: End year
+
+        Returns:
+            List of all PMIDs found across all years
+        """
+        all_pmids = []
+        year_range = end_year - start_year + 1
+
+        print(f"Searching {year_range} years ({start_year}-{end_year}) by year to retrieve all results...")
+
+        for year in range(start_year, end_year + 1):
+            query = (
+                f'{mesh_term} NOT ('
+                'Review[ptyp] OR Comment[ptyp] OR Editorial[ptyp] OR '
+                'Letter[ptyp] OR "Case Reports"[ptyp] OR News[ptyp] OR '
+                '"Biography"[Publication Type]) '
+                f'AND ("{year}/01/01"[PDAT]: "{year}/12/31"[PDAT]) '
+                'AND english[language]'
+            )
+
+            try:
+                pmids = self._search_pmids(query, year=year)
+                all_pmids.extend(pmids)
+            except Exception as e:
+                print(f"  ⚠️  Error searching year {year}: {e}")
+                continue
+
+            time.sleep(0.2)  # Delay between year queries
+
+        print(f"\nTotal PMIDs across all years: {len(all_pmids)}")
+        return all_pmids
+
+    def _search_pmids(self, query: str, year: Optional[int] = None) -> List[str]:
+        """
+        Execute a single PubMed search and return all matching PMIDs.
+
+        Fetches up to 9,999 records (NCBI ESearch limitation).
 
         Args:
             query: PubMed search query
+            year: Year (for logging purposes)
 
         Returns:
-            List of PMIDs (max 9,999 due to NCBI limitations)
+            List of PMIDs found
         """
-        print(f"Searching PubMed: {query[:80]}...")
+        year_str = f" ({year})" if year else ""
+        print(f"  Searching{year_str}...", end=" ")
 
         try:
-            # Initial search to get count and WebEnv
+            # Execute search with retmax=9999 to get all available results
             search_handle = Entrez.esearch(
                 db="pubmed",
                 term=query,
-                usehistory="y",
-                retmax=0  # We only need the count and WebEnv
+                retmax=9999,  # Maximum allowed
+                rettype="uilist",
+                retmode="xml"
             )
             search_results = Entrez.read(search_handle)
             search_handle.close()
 
-            count = int(search_results["Count"])
-            web_env = search_results["WebEnv"]
-            query_key = search_results["QueryKey"]
+            pmids = search_results.get("IdList", [])
+            count = int(search_results.get("Count", 0))
 
-            print(f"Found {count} papers")
+            print(f"Found {len(pmids)} papers (total: {count})")
 
-            if count == 0:
-                return []
-
-            # NCBI ESearch limitation: can only retrieve first 9,999 records
-            max_retrievable = 9999
-            if count > max_retrievable:
-                print(f"⚠️  WARNING: PubMed returned {count} papers, but ESearch can only retrieve {max_retrievable}.")
-                print(f"   Fetching first {max_retrievable} papers only.")
-                count = max_retrievable
-
-            # Fetch all PMIDs in batches using WebEnv
-            pmids = []
-            batch_size = 10000  # Fetch up to 10k at a time (but won't exceed 9999 total due to cap above)
-            for start in range(0, count, batch_size):
-                print(f"  Fetching PMIDs {start + 1} to {min(start + batch_size, count)}...")
-
-                fetch_handle = Entrez.esearch(
-                    db="pubmed",
-                    term=query,
-                    webenv=web_env,
-                    query_key=query_key,
-                    retstart=start,
-                    retmax=min(batch_size, count - start)  # Don't exceed remaining count
-                )
-                fetch_results = Entrez.read(fetch_handle)
-                fetch_handle.close()
-
-                pmids.extend(fetch_results["IdList"])
-                time.sleep(0.1)  # Small delay to respect rate limits
-
-            print(f"Successfully retrieved {len(pmids)} PMIDs")
             return pmids
 
         except Exception as e:
-            print(f"Error during PubMed search: {e}")
+            print(f"Error")
             raise
 
     def fetch_paper_details(self, pmids: List[str], batch_size: int = 500) -> List[Dict]:
