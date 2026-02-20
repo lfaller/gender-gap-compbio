@@ -26,10 +26,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added architecture section explaining database design
   - Updated quick start guide with new pipeline commands
   - Clarified repository structure to reflect code-first approach
+- **Pipeline Simplified:** Removed arXiv integration due to persistent API rate limiting
+  - Focus on PubMed data (Biology + Computational Biology) with 410k+ papers
+  - Sufficient sample size for robust statistical analysis
 
 ### Removed
 - Jupyter notebooks (notebooks/01-05) — replaced by `pipeline.py`
 - CSV output files for author-level data (now in database)
+- **arXiv data fetching** (`src/arxiv_fetcher.py` and `run_arxiv_fetch.py`)
+  - arXiv API rate limiting prevented reliable data collection
+  - PubMed sample size (410k+ papers) sufficient for analysis
 
 ---
 

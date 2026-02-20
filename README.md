@@ -32,14 +32,13 @@ This project extends the Bonham & Stefan (2017) analysis of gender representatio
 ├── run_gender_inference_db.py   # Gender inference with SQLite backend
 │
 ├── data/
-│   ├── processed/               # CSV files from PubMed/arXiv fetches
+│   ├── processed/               # CSV files from PubMed fetches
 │   ├── gender_data.db           # SQLite database (gender inferred data)
 │   └── gender_cache.json        # Cached name → gender lookups
 │
 ├── src/
 │   ├── __init__.py
 │   ├── pubmed_fetcher.py        # PubMed API wrapper
-│   ├── arxiv_fetcher.py         # arXiv API wrapper
 │   ├── gender_utils.py          # Gender inference logic
 │   ├── db_utils.py              # SQLite database operations
 │   ├── bootstrap.py             # Statistical analysis
@@ -91,10 +90,9 @@ python pipeline.py --figures-only
 
 **Behind the scenes:**
 1. **Step 1:** Fetch PubMed data for Biology and Computational Biology
-2. **Step 2:** Fetch arXiv data for quantitative biology and computer science
-3. **Step 3:** Gender inference (using `run_gender_inference_db.py`)
-4. **Step 4:** Bootstrap statistical analysis
-5. **Step 5:** Generate publication-ready figures
+2. **Step 2:** Gender inference (using `run_gender_inference_db.py`)
+3. **Step 3:** Bootstrap statistical analysis
+4. **Step 4:** Generate publication-ready figures
 
 **For gender inference only (if you want to rerun just that step):**
 ```bash
@@ -111,7 +109,7 @@ As of February 2026, the project uses a **SQLite database** for efficient storag
 
 The `data/gender_data.db` SQLite database contains three tables:
 
-- **papers:** Paper metadata (pmid/arxiv_id, title, year, dataset)
+- **papers:** Paper metadata (pmid, title, year, dataset)
 - **authors:** Author gender inferences (name, p_female, gender, source)
 - **author_positions:** Paper-author relationships with position information (paper_id, author_id, position)
 
@@ -148,11 +146,7 @@ This approach is more efficient than the previous CSV expansion because:
 - Exclusions: Reviews, comments, editorials, letters, case reports, news, biographies
 - Language: English only
 - Retrieved fields: PMID, publication year, journal, full author list with first names
-
-**arXiv (2015–2024)**
-- **Quantitative Biology:** `q-bio` category
-- **Computer Science:** `cs` category
-- Retrieved fields: arXiv ID, submission date, category, full author list
+- **Total:** ~410,000 papers across both categories (2015–2024)
 
 ### Gender Inference Strategy
 
@@ -197,7 +191,6 @@ For each author position and dataset, we:
 | **Female PI Effect** | P_female by position, stratified by gender of last author (proxy for PI gender) |
 | **Subfield Comparison** | Gender gap variation within computational biology subfields (genomics, proteomics, systems biology, etc.) |
 | **COVID-19 Impact** | Year-over-year comparison highlighting 2020–2021 |
-| **arXiv Comparison** | P_female in q-bio vs. cs, 2015–2024 |
 
 ## Methodological Limitations
 
@@ -216,7 +209,6 @@ These limitations are explicitly documented and should be transparently reported
 - Giannos P et al. (2023). Female Dynamics in Authorship of Scientific Publications in the Public Library of Science. *EJIHPE* 13(2). https://doi.org/10.3390/ejihpe13020018
 - Mihaljević H & Santamaría L (2021). Comparison and benchmark of name-to-gender inference services. *PeerJ Comput Sci* 7:e156. https://doi.org/10.7717/peerj-cs.156
 - NCBI E-utilities API: https://www.ncbi.nlm.nih.gov/books/NBK25499/
-- arXiv API: https://github.com/lukasschwab/arxiv.py
 - gender-guesser: https://pypi.org/project/gender-guesser/
 - genderize.io: https://genderize.io
 
