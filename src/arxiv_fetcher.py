@@ -62,7 +62,7 @@ class arXivFetcher:
 
     def _fetch_category(self, category: str, start_year: int = 2015, end_year: int = 2024) -> List[Dict]:
         """
-        Fetch preprints from a specific arXiv category.
+        Fetch preprints from a specific arXiv category within a date range.
 
         Args:
             category: arXiv category (e.g., 'q-bio', 'cs')
@@ -79,17 +79,25 @@ class arXivFetcher:
         print("(If this times out, arXiv may be busy - try again later)\n")
 
         try:
-            # Search for all papers in category from start_year to end_year
+            # Build query with category and submission date range
+            # arXiv uses submissionDate format: YYYYMM010000 to YYYYMM312359
+            start_date = f"{start_year}0101000000"
+            end_date = f"{end_year}1231235959"
+
+            query = f"cat:{category} AND submittedDate:[{start_date} TO {end_date}]"
+
             search = arxiv.Search(
-                query=f"cat:{category}",
+                query=query,
                 max_results=None,
                 sort_by=arxiv.SortCriterion.SubmittedDate
             )
 
             count = 0
             for result in tqdm(self.client.results(search), desc=f"Fetching {category}"):
-                # Filter by year
+                # Extract year from result
                 year = result.published.year
+
+                # Double-check year filter (in case API filtering is loose)
                 if year < start_year or year > end_year:
                     continue
 
