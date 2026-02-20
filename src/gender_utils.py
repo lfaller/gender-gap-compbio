@@ -181,7 +181,9 @@ def assign_positions(author_list: list) -> list:
     """
     n = len(author_list)
 
-    if n == 1:
+    if n == 0:
+        return []
+    elif n == 1:
         return [(author_list[0], "first")]
     elif n == 2:
         return [(author_list[0], "first"), (author_list[1], "last")]

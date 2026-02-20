@@ -22,8 +22,14 @@ print("="*70)
 print("Fetching quantitative biology (q-bio) preprints...")
 print("="*70)
 qbio_preprints = fetcher.fetch_quantitative_biology(start_year=2015, end_year=2024)
-qbio_preprints = assign_positions(qbio_preprints)
-qbio_df = pd.DataFrame(qbio_preprints)
+
+if len(qbio_preprints) > 0:
+    qbio_preprints = assign_positions(qbio_preprints)
+    qbio_df = pd.DataFrame(qbio_preprints)
+else:
+    # Create empty dataframe with correct schema
+    qbio_df = pd.DataFrame(columns=["arxiv_id", "title", "year", "published_date", "authors", "author_count", "category", "positions"])
+
 qbio_df["dataset"] = "q-bio"
 qbio_df.to_csv("data/processed/arxiv_qbio_2015_2024.csv", index=False)
 print(f"✓ Saved {len(qbio_df)} q-bio preprints\n")
@@ -33,8 +39,14 @@ print("="*70)
 print("Fetching computer science (cs) preprints...")
 print("="*70)
 cs_preprints = fetcher.fetch_computer_science(start_year=2015, end_year=2024)
-cs_preprints = assign_positions(cs_preprints)
-cs_df = pd.DataFrame(cs_preprints)
+
+if len(cs_preprints) > 0:
+    cs_preprints = assign_positions(cs_preprints)
+    cs_df = pd.DataFrame(cs_preprints)
+else:
+    # Create empty dataframe with correct schema
+    cs_df = pd.DataFrame(columns=["arxiv_id", "title", "year", "published_date", "authors", "author_count", "category", "positions"])
+
 cs_df["dataset"] = "cs"
 cs_df.to_csv("data/processed/arxiv_cs_2015_2024.csv", index=False)
 print(f"✓ Saved {len(cs_df)} cs preprints\n")
