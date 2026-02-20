@@ -4,10 +4,9 @@ Gender Gap in Computational Biology: Full Analysis Pipeline
 
 This script runs the complete analysis pipeline:
 1. Fetch PubMed data (Biology and Computational Biology)
-2. Fetch arXiv data (q-bio and cs)
-3. Infer gender from author names
-4. Run bootstrap statistical analysis
-5. Generate publication-ready figures
+2. Infer gender from author names
+3. Run bootstrap statistical analysis
+4. Generate publication-ready figures
 
 Usage:
     python pipeline.py                    # Run full pipeline
@@ -24,7 +23,6 @@ from dotenv import load_dotenv
 
 # Import pipeline modules
 from src.pubmed_fetcher import PubMedFetcher
-from src.arxiv_fetcher import arXivFetcher
 from src.gender_utils import GenderInference, assign_positions
 from src.db_utils import GenderDatabase
 from src.bootstrap import bootstrap_by_multiple_groups, bootstrap_pfemale
@@ -98,41 +96,6 @@ def step1_fetch_pubmed(skip_fetch=False):
     return bio_df, comp_df
 
 
-def step2_fetch_arxiv(skip_fetch=False):
-    """Step 2: Fetch arXiv data."""
-    print("\n" + "="*70)
-    print("STEP 2: Fetching arXiv Data (q-bio & cs)")
-    print("="*70)
-
-    if skip_fetch:
-        print("⊘ Skipping fetch (using cached data)...")
-        qbio_df = pd.read_csv("data/processed/arxiv_qbio_2015_2024.csv")
-        cs_df = pd.read_csv("data/processed/arxiv_cs_2015_2024.csv")
-        return qbio_df, cs_df
-
-    fetcher = arXivFetcher(delay_seconds=3.0)
-
-    # Fetch q-bio preprints
-    print("Fetching quantitative biology (q-bio) preprints...")
-    qbio_preprints = fetcher.fetch_quantitative_biology(start_year=2015, end_year=2024)
-    qbio_preprints = add_author_positions(qbio_preprints)
-    qbio_df = pd.DataFrame(qbio_preprints)
-    qbio_df["dataset"] = "q-bio"
-    qbio_df.to_csv("data/processed/arxiv_qbio_2015_2024.csv", index=False)
-    print(f"✓ Saved {len(qbio_df)} q-bio preprints\n")
-
-    # Fetch cs preprints
-    print("Fetching computer science (cs) preprints...")
-    cs_preprints = fetcher.fetch_computer_science(start_year=2015, end_year=2024)
-    cs_preprints = add_author_positions(cs_preprints)
-    cs_df = pd.DataFrame(cs_preprints)
-    cs_df["dataset"] = "cs"
-    cs_df.to_csv("data/processed/arxiv_cs_2015_2024.csv", index=False)
-    print(f"✓ Saved {len(cs_df)} cs preprints\n")
-
-    return qbio_df, cs_df
-
-
 def step3_gender_inference():
     """Step 3: Infer gender from author names (stored in SQLite database)."""
     print("\n" + "="*70)
@@ -149,7 +112,7 @@ def step3_gender_inference():
         print(f"  Loaded {db.count_unique_authors():,} unique authors")
         print(f"  Loaded {db.count_author_positions():,} author positions\n")
         db.close()
-        return pubmed_author_df, pubmed_author_df
+        return pubmed_author_df
 
     print("Database not found. Please run: python run_gender_inference_db.py")
     print("\nThis script generates gender inference and populates the database.")
@@ -173,9 +136,6 @@ def step4_analysis():
         (pubmed_df["year"] >= 2015) & (pubmed_df["year"] <= 2024)
     ]
 
-    # Separate by dataset
-    arxiv_df = pubmed_df[pubmed_df["dataset"].isin(["q-bio", "cs"])]
-
     # Analysis 1: Position breakdown
     print("Analysis 1: P_female by Author Position...")
     position_results = bootstrap_by_multiple_groups(
@@ -198,25 +158,6 @@ def step4_analysis():
     )
     temporal_results.to_csv("data/processed/analysis_temporal_trend.csv", index=False)
     print(f"✓ {len(temporal_results)} year-dataset combinations analyzed\n")
-
-    # Analysis 3: arXiv comparison
-    print("Analysis 3: arXiv Comparison (q-bio vs. cs)...")
-    if len(arxiv_df) == 0:
-        print("⚠️  No arXiv data available (fetch returned 0 preprints)")
-        arxiv_position_results = pd.DataFrame()  # Empty results
-    else:
-        arxiv_position_results = bootstrap_by_multiple_groups(
-            arxiv_df,
-            group_cols=["dataset", "position"],
-            prob_col="p_female",
-            n_iterations=1000,
-        )
-        print(arxiv_position_results.to_string())
-
-    arxiv_position_results.to_csv(
-        "data/processed/analysis_arxiv_position.csv", index=False
-    )
-    print()
 
     # Analysis 4: COVID-19 impact
     print("Analysis 4: COVID-19 Impact Analysis...")
@@ -248,10 +189,10 @@ def step4_analysis():
     print(covid_df.to_string())
     print()
 
-    return position_results, temporal_results, arxiv_position_results, covid_df
+    return position_results, temporal_results, covid_df
 
 
-def step5_figures(position_results, temporal_results, arxiv_position_results, covid_df):
+def step5_figures(position_results, temporal_results, covid_df):
     """Step 5: Generate publication-ready figures."""
     print("\n" + "="*70)
     print("STEP 5: Generating Figures")
@@ -293,27 +234,7 @@ def step5_figures(position_results, temporal_results, arxiv_position_results, co
     plt.close()
     print("✓ Saved Figure 2\n")
 
-    # Figure 3: arXiv comparison
-    if len(arxiv_position_results) > 0:
-        print("Generating Figure 3: arXiv comparison...")
-        fig, ax = plot_pfemale_by_position(
-            arxiv_position_results,
-            group_col="dataset",
-            output_path=f"{output_dir}/fig4_arxiv_comparison.png",
-            figsize=(10, 6),
-        )
-        plt.savefig(
-            f"{output_dir}/fig4_arxiv_comparison.svg",
-            dpi=300,
-            bbox_inches="tight",
-            format="svg",
-        )
-        plt.close()
-        print("✓ Saved Figure 3\n")
-    else:
-        print("⊘ Skipping Figure 3: No arXiv data available\n")
-
-    # Figure 4: COVID-19 impact
+    # Figure 3: COVID-19 impact
     print("Generating Figure 4: COVID-19 impact...")
     fig, ax = plt.subplots(figsize=(10, 6))
     periods = covid_df["period"].tolist()
@@ -337,17 +258,17 @@ def step5_figures(position_results, temporal_results, arxiv_position_results, co
     ax.grid(axis="y", alpha=0.3)
 
     plt.tight_layout()
-    plt.savefig(f"{output_dir}/fig5_covid_impact.png", dpi=300, bbox_inches="tight")
+    plt.savefig(f"{output_dir}/fig4_covid_impact.png", dpi=300, bbox_inches="tight")
     plt.savefig(
-        f"{output_dir}/fig5_covid_impact.svg",
+        f"{output_dir}/fig4_covid_impact.svg",
         dpi=300,
         bbox_inches="tight",
         format="svg",
     )
     plt.close()
-    print("✓ Saved Figure 4\n")
+    print("✓ Saved Figure 3\n")
 
-    # Figure 5: Interactive temporal trend
+    # Figure 4: Interactive temporal trend
     print("Generating interactive figure...")
     fig = plot_interactive_temporal_trend(
         temporal_results,
@@ -453,22 +374,18 @@ def main():
             # Step 1: Fetch PubMed
             bio_df, comp_df = step1_fetch_pubmed(skip_fetch=args.skip_fetch)
 
-            # Step 2: Fetch arXiv
-            qbio_df, cs_df = step2_fetch_arxiv(skip_fetch=args.skip_fetch)
+            # Step 2: Gender inference
+            pubmed_author_df = step3_gender_inference()
 
-            # Step 3: Gender inference
-            pubmed_author_df, arxiv_author_df = step3_gender_inference()
-
-        # Step 4: Analysis (always run unless analysis results already exist)
+        # Step 3: Analysis (always run unless analysis results already exist)
         (
             position_results,
             temporal_results,
-            arxiv_position_results,
             covid_df,
         ) = step4_analysis()
 
-        # Step 5: Figures
-        step5_figures(position_results, temporal_results, arxiv_position_results, covid_df)
+        # Step 4: Figures
+        step5_figures(position_results, temporal_results, covid_df)
 
         print("\n" + "="*70)
         print("✓ PIPELINE COMPLETE!")
