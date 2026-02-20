@@ -1,13 +1,13 @@
 # Gender Representation in Computational Biology: A 2025 Update
 
-Replicating and extending the landmark study by Bonham & Stefan (2017) on gender representation in computational biology authorship, with data through 2024.
+Replicating and extending the landmark study by Bonham & Stefan (2017) on gender representation in computational biology authorship, with data through 2025.
 
 **Project Lead:** Lina Faller, Ph.D.
 **Affiliations:** [linafaller.com](https://www.linafaller.com) | VP, Boston Women in Bioinformatics (BWIB)
 
 ## Overview
 
-This project extends the Bonham & Stefan (2017) analysis of gender representation in computational biology through 2024, examines emerging trends (including the COVID-19 pandemic's impact), and investigates subfield-specific gender gaps. Results will be published as:
+This project extends the Bonham & Stefan (2017) analysis of gender representation in computational biology through 2025, examines emerging trends (including the COVID-19 pandemic's impact), and investigates subfield-specific gender gaps. Results will be published as:
 
 1. **BWIB Deep Dive blog post** (1,200–1,800 words)
 2. **LinkedIn article** (400–600 words)
@@ -140,13 +140,13 @@ This approach is more efficient than the previous CSV expansion because:
 
 ### Data Sources
 
-**PubMed (1997–2024)**
+**PubMed (1997–2025)**
 - **Biology:** Papers tagged with `"Biology"[Mesh]` MeSH term
 - **Computational Biology:** Papers tagged with `"Computational Biology"[Majr]` MeSH term (major term only)
 - Exclusions: Reviews, comments, editorials, letters, case reports, news, biographies
 - Language: English only
 - Retrieved fields: PMID, publication year, journal, full author list with first names
-- **Total:** ~410,000 papers across both categories (2015–2024)
+- **Total:** ~430,000+ papers across both categories (2015–2025)
 
 ### Gender Inference Strategy
 

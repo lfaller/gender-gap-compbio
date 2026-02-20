@@ -69,7 +69,7 @@ def step1_fetch_pubmed(skip_fetch=False):
 
     # Fetch Biology papers
     print("Fetching Biology papers...")
-    bio_pmids = fetcher.search_biology(start_year=2015, end_year=2024)
+    bio_pmids = fetcher.search_biology(start_year=2015, end_year=2025)
     print(f"Fetched {len(bio_pmids)} Biology PMIDs\n")
 
     print("Fetching Biology paper details...")
@@ -77,12 +77,12 @@ def step1_fetch_pubmed(skip_fetch=False):
     bio_papers = add_author_positions(bio_papers)
     bio_df = pd.DataFrame(bio_papers)
     bio_df["dataset"] = "Biology"
-    bio_df.to_csv("data/processed/pubmed_biology_2015_2024.csv", index=False)
+    bio_df.to_csv("data/processed/pubmed_biology_2015_2025.csv", index=False)
     print(f"✓ Saved {len(bio_df)} Biology papers\n")
 
     # Fetch Computational Biology papers
     print("Fetching Computational Biology papers...")
-    comp_pmids = fetcher.search_computational_biology(start_year=2015, end_year=2024)
+    comp_pmids = fetcher.search_computational_biology(start_year=2015, end_year=2025)
     print(f"Fetched {len(comp_pmids)} Computational Biology PMIDs\n")
 
     print("Fetching Computational Biology paper details...")
@@ -90,7 +90,7 @@ def step1_fetch_pubmed(skip_fetch=False):
     comp_papers = add_author_positions(comp_papers)
     comp_df = pd.DataFrame(comp_papers)
     comp_df["dataset"] = "Computational Biology"
-    comp_df.to_csv("data/processed/pubmed_compbio_2015_2024.csv", index=False)
+    comp_df.to_csv("data/processed/pubmed_compbio_2015_2025.csv", index=False)
     print(f"✓ Saved {len(comp_df)} Computational Biology papers\n")
 
     return bio_df, comp_df
@@ -131,15 +131,15 @@ def step4_analysis():
     pubmed_df = db.get_author_data_as_dataframe()
     db.close()
 
-    # Filter PubMed data (2015-2024)
-    pubmed_2015_2024 = pubmed_df[
-        (pubmed_df["year"] >= 2015) & (pubmed_df["year"] <= 2024)
+    # Filter PubMed data (2015-2025)
+    pubmed_2015_2025 = pubmed_df[
+        (pubmed_df["year"] >= 2015) & (pubmed_df["year"] <= 2025)
     ]
 
     # Analysis 1: Position breakdown
     print("Analysis 1: P_female by Author Position...")
     position_results = bootstrap_by_multiple_groups(
-        pubmed_2015_2024,
+        pubmed_2015_2025,
         group_cols=["dataset", "position"],
         prob_col="p_female",
         n_iterations=1000,
@@ -151,7 +151,7 @@ def step4_analysis():
     # Analysis 2: Temporal trends
     print("Analysis 2: Temporal Trends (P_female over time)...")
     temporal_results = bootstrap_by_multiple_groups(
-        pubmed_2015_2024,
+        pubmed_2015_2025,
         group_cols=["dataset", "year"],
         prob_col="p_female",
         n_iterations=1000,
@@ -164,14 +164,14 @@ def step4_analysis():
     periods = {
         "Pre-COVID (2018-2019)": (2018, 2019),
         "Pandemic (2020-2021)": (2020, 2021),
-        "Recovery (2022-2023)": (2022, 2023),
+        "Recovery (2022-2025)": (2022, 2025),
     }
 
     covid_results = []
     for period_name, (start_year, end_year) in periods.items():
-        period_df = pubmed_2015_2024[
-            (pubmed_2015_2024["year"] >= start_year)
-            & (pubmed_2015_2024["year"] <= end_year)
+        period_df = pubmed_2015_2025[
+            (pubmed_2015_2025["year"] >= start_year)
+            & (pubmed_2015_2025["year"] <= end_year)
         ]
         mean, ci_lower, ci_upper = bootstrap_pfemale(period_df["p_female"].tolist())
         covid_results.append(

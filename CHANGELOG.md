@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Date Range Extended:** Updated analysis to include 2025 data (2015–2025)
+  - PubMed data now includes 430,000+ papers instead of 410,000
+  - COVID-19 recovery period extended to 2022–2025
+  - Temporal trend analysis now includes latest year
+
 ### Added
 - **SQLite Database Backend:** Replaced CSV-based storage with SQLite for better performance and scalability
   - New `src/db_utils.py` module for database operations
