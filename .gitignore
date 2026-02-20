@@ -8,6 +8,9 @@
 # Data and cache files
 data/raw/
 data/processed/*.csv
+data/processed/*.db
+data/*.db
+data/*.db-journal
 data/gender_cache.json
 
 # Python
