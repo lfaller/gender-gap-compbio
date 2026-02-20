@@ -28,7 +28,8 @@ This project extends the Bonham & Stefan (2017) analysis of gender representatio
 ├── requirements.txt
 ├── .gitignore
 │
-├── pipeline.py                  # Main analysis pipeline (replaces notebooks)
+├── cli.py                       # Professional CLI tool (Click-based) — RECOMMENDED
+├── pipeline.py                  # Main analysis pipeline (legacy, still works)
 ├── run_gender_inference_db.py   # Gender inference with SQLite backend
 │
 ├── data/
@@ -75,31 +76,68 @@ export NCBI_API_KEY="your_api_key_here"
 
 ### 4. Run the Analysis Pipeline
 
-The pipeline is now implemented as a single Python script with modular steps:
+#### Option A: CLI Tool (Recommended) — `cli.py`
+
+Professional command-line interface with flexible parameters:
 
 ```bash
-# Option 1: Full pipeline (fetch + inference + analysis + figures)
+# Show all available commands
+python cli.py --help
+
+# Full pipeline (fetch 2015-2025, inference, analysis, figures)
+python cli.py run
+
+# Fetch only PubMed data
+python cli.py fetch --start-year 2015 --end-year 2025
+
+# Fetch just 2025 data and append to existing
+python cli.py fetch --start-year 2025 --end-year 2025 --append
+
+# Run analysis only (after inference completes)
+python cli.py analyze
+
+# Generate figures only
+python cli.py figures
+
+# Get help on any command
+python cli.py fetch --help
+python cli.py analyze --help
+```
+
+**Workflow with CLI:**
+1. `python cli.py fetch --start-year 2025 --end-year 2025 --append` (fetch new data)
+2. `python run_gender_inference_db.py` (infer gender for unique authors)
+3. `python cli.py analyze` (run statistical analysis)
+4. `python cli.py figures` (generate publication-ready figures)
+
+#### Option B: Legacy Pipeline — `pipeline.py`
+
+Simple monolithic script (still works):
+
+```bash
+# Full pipeline
 python pipeline.py
 
-# Option 2: Skip fetching (use cached data)
+# Skip data fetching (use cached data)
 python pipeline.py --skip-fetch
 
-# Option 3: Generate figures only (from existing analysis results)
+# Generate figures only
 python pipeline.py --figures-only
 ```
 
-**Behind the scenes:**
-1. **Step 1:** Fetch PubMed data for Biology and Computational Biology
-2. **Step 2:** Gender inference (using `run_gender_inference_db.py`)
-3. **Step 3:** Bootstrap statistical analysis
-4. **Step 4:** Generate publication-ready figures
+#### Gender Inference (separate step)
 
-**For gender inference only (if you want to rerun just that step):**
+Run this anytime to infer gender and populate the SQLite database:
+
 ```bash
 python run_gender_inference_db.py
 ```
 
-This populates the SQLite database at `data/gender_data.db`.
+This script:
+1. Loads paper data from CSV files
+2. Identifies unique authors
+3. Infers gender using a two-layer strategy (gender-guesser + genderize.io API)
+4. Populates SQLite database at `data/gender_data.db`
 
 ## Architecture: SQLite Database Approach
 

@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Temporal trend analysis now includes latest year
 
 ### Added
+- **Professional CLI Tool:** New `cli.py` using Click framework for flexible pipeline execution
+  - Modular subcommands: `fetch`, `infer`, `analyze`, `figures`, `run`
+  - Flexible parameters: `--start-year`, `--end-year`, `--append` flags
+  - Support for custom date ranges and incremental data updates
+  - Built-in help for each command (`python cli.py COMMAND --help`)
+  - Professional error handling and user-friendly feedback
+  - Replaces one-off scripts with unified interface
 - **SQLite Database Backend:** Replaced CSV-based storage with SQLite for better performance and scalability
   - New `src/db_utils.py` module for database operations
   - New `run_gender_inference_db.py` script for gender inference with database persistence
