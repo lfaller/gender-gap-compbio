@@ -1,0 +1,18 @@
+Category,Count,Percentage,Notes
+Total Authors,977731,100.0,All authors in database
+With Known Gender,969340,99.1,Authors with determined gender classification
+Male,569108,58.3,Authors classified as male
+Female,400227,41.0,Authors classified as female
+Other,5,0.01,Non-binary and other classifications
+Unknown or Blank,6391,0.7,Remaining unclassified authors
+,,,
+Classification Task,Count,Percentage,Notes
+Starting Unknowns,392610,100.0,Names with length > 1 character requiring classification
+Successfully Classified,386219,98.4,Names classified via LLM
+Remaining Unknown,6391,1.6,Names that could not be classified
+,,,
+Classification by Stage,Count,Success Rate,Cost
+Free Tier (Stage 1),21957,5.6%,$0.00
+Paid Tier (Stage 2),347280,93.4%,$0.18
+Improved Parsing (Stage 3),41968,93.8%,Included
+Total Classified,386219,98.4%,$0.18
