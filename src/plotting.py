@@ -232,3 +232,174 @@ def plot_interactive_temporal_trend(
         print(f"Saved interactive figure to {output_path}")
 
     return fig
+
+
+def plot_pfemale_by_journal_quartile(
+    df: pd.DataFrame,
+    output_path: str = None,
+    figsize: tuple = (12, 6)
+):
+    """
+    Bar plot of P_female by author position, grouped by journal quartile.
+
+    Args:
+        df: DataFrame with columns: quartile, position, mean, ci_lower, ci_upper
+        output_path: Path to save figure (optional)
+        figsize: Figure size (width, height)
+    """
+    fig, ax = plt.subplots(figsize=figsize)
+
+    # Define order for quartiles (Q1 = highest impact)
+    quartile_order = ["Q1", "Q2", "Q3", "Q4"]
+    position_order = ["first", "second", "other", "penultimate", "last"]
+
+    # Filter to rows with valid positions
+    positions = [p for p in position_order if p in df["position"].unique()]
+
+    # Set up x-axis positions
+    x_pos = np.arange(len(positions))
+    width = 0.2  # Width for each bar
+
+    # Plot bars for each quartile
+    for i, quartile in enumerate(quartile_order):
+        quartile_df = df[df["quartile"] == quartile].set_index("position")
+        means = [quartile_df.loc[p, "mean"] if p in quartile_df.index else None for p in positions]
+        ci_lower = [quartile_df.loc[p, "ci_lower"] if p in quartile_df.index else None for p in positions]
+        ci_upper = [quartile_df.loc[p, "ci_upper"] if p in quartile_df.index else None for p in positions]
+
+        # Calculate error bars
+        errors = [
+            [m - l if m and l else 0 for m, l in zip(means, ci_lower)],
+            [u - m if u and m else 0 for u, m in zip(ci_upper, means)]
+        ]
+
+        colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]
+        ax.bar(
+            x_pos + i * width,
+            means,
+            width,
+            label=quartile,
+            yerr=errors,
+            capsize=5,
+            color=colors[i],
+            alpha=0.8,
+            error_kw={"elinewidth": 1}
+        )
+
+        # Add value labels on top of bars
+        for j, (x, mean) in enumerate(zip(x_pos + i * width, means)):
+            if mean is not None:
+                label_text = f"{mean*100:.1f}%"
+                ax.text(
+                    x, mean + 0.02,
+                    label_text,
+                    ha="center",
+                    va="bottom",
+                    fontsize=9,
+                    fontweight="bold"
+                )
+
+    # Add reference line at 50% parity
+    ax.axhline(y=0.5, color="red", linestyle="--", linewidth=1.5, alpha=0.7, label="50% parity")
+
+    ax.set_xlabel("Author Position", fontsize=12, fontweight="bold")
+    ax.set_ylabel("P(Female)", fontsize=12, fontweight="bold")
+    ax.set_title("Female Representation by Journal Impact Quartile", fontsize=13, fontweight="bold")
+    ax.set_ylim([0, 1])
+    ax.set_xticks(x_pos + width * 1.5)
+    ax.set_xticklabels(positions)
+    ax.legend(title="Journal\nQuartile", loc="upper left")
+    ax.grid(axis="y", alpha=0.3)
+
+    plt.tight_layout()
+
+    if output_path:
+        plt.savefig(output_path, dpi=300, bbox_inches="tight")
+        print(f"Saved figure to {output_path}")
+
+    return fig, ax
+
+
+def plot_journal_quartile_distribution(
+    df: pd.DataFrame,
+    position: str = "first",
+    output_path: str = None,
+    figsize: tuple = (10, 6)
+):
+    """
+    Stacked bar chart showing distribution of journal quartiles by author gender.
+
+    Args:
+        df: DataFrame with columns: position, gender, quartile
+        position: Author position to analyze (default: 'first')
+        output_path: Path to save figure (optional)
+        figsize: Figure size (width, height)
+    """
+    fig, ax = plt.subplots(figsize=figsize)
+
+    # Filter to specified position
+    position_df = df[df["position"] == position].copy()
+
+    # Get counts by gender and quartile
+    quartile_order = ["Q1", "Q2", "Q3", "Q4"]
+    genders = ["female", "male"]
+
+    # Calculate distribution
+    distributions = {}
+    totals = {}
+
+    for gender in genders:
+        gender_df = position_df[position_df["gender"] == gender]
+        totals[gender] = len(gender_df)
+
+        counts = {}
+        for q in quartile_order:
+            counts[q] = len(gender_df[gender_df["quartile"] == q])
+
+        # Convert to percentages
+        distributions[gender] = {q: (counts[q] / totals[gender] * 100) if totals[gender] > 0 else 0
+                                 for q in quartile_order}
+
+    # Create stacked bar chart
+    x_pos = np.arange(len(genders))
+    width = 0.5
+    bottom = np.zeros(len(genders))
+
+    colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]
+
+    for i, q in enumerate(quartile_order):
+        values = [distributions[g][q] for g in genders]
+        ax.bar(x_pos, values, width, label=q, bottom=bottom, color=colors[i], alpha=0.8)
+
+        # Add value labels in the center of each stacked segment
+        for j, (x, val, b) in enumerate(zip(x_pos, values, bottom)):
+            if val > 3:  # Only show label if segment is large enough
+                ax.text(
+                    x, b + val / 2,
+                    f"{val:.1f}%",
+                    ha="center",
+                    va="center",
+                    fontsize=9,
+                    fontweight="bold",
+                    color="white"
+                )
+
+        bottom += np.array(values)
+
+    # Customize plot
+    ax.set_ylabel("Percentage of Papers (%)", fontsize=12, fontweight="bold")
+    ax.set_title(f"Journal Impact Distribution by Author Gender ({position.capitalize()} Author Position)",
+                 fontsize=13, fontweight="bold")
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels([f"{g.capitalize()}\n(n={totals[g]})" for g in genders])
+    ax.legend(title="Journal\nQuartile", loc="upper right")
+    ax.set_ylim([0, 100])
+    ax.grid(axis="y", alpha=0.3)
+
+    plt.tight_layout()
+
+    if output_path:
+        plt.savefig(output_path, dpi=300, bbox_inches="tight")
+        print(f"Saved figure to {output_path}")
+
+    return fig, ax

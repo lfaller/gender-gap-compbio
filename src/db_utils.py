@@ -64,6 +64,19 @@ class GenderDatabase:
             """
         )
 
+        # Journals table (journal names with ScimagoJR quartiles)
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS journals (
+                id INTEGER PRIMARY KEY,
+                journal_name TEXT UNIQUE NOT NULL,
+                quartile TEXT NOT NULL,
+                is_exact_match INTEGER DEFAULT 1,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+        )
+
         # Create indices for faster queries
         cursor.execute(
             "CREATE INDEX IF NOT EXISTS idx_papers_year ON papers(year)"
@@ -76,6 +89,9 @@ class GenderDatabase:
         )
         cursor.execute(
             "CREATE INDEX IF NOT EXISTS idx_author_positions_position ON author_positions(position)"
+        )
+        cursor.execute(
+            "CREATE INDEX IF NOT EXISTS idx_journals_name ON journals(journal_name)"
         )
 
         self.conn.commit()
@@ -245,6 +261,50 @@ class GenderDatabase:
         cursor = self.conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM author_positions")
         return cursor.fetchone()[0]
+
+    def insert_journal(self, journal_name: str, quartile: str, is_exact_match: bool = True):
+        """Insert or update a journal with its quartile."""
+        cursor = self.conn.cursor()
+        cursor.execute(
+            """
+            INSERT OR REPLACE INTO journals (journal_name, quartile, is_exact_match)
+            VALUES (?, ?, ?)
+            """,
+            (journal_name, quartile, 1 if is_exact_match else 0),
+        )
+        self.conn.commit()
+
+    def batch_insert_journals(self, journal_data: List[Dict]):
+        """Batch insert journal data.
+
+        Args:
+            journal_data: List of dicts with keys: journal_name, quartile, is_exact_match
+        """
+        cursor = self.conn.cursor()
+        for data in journal_data:
+            cursor.execute(
+                """
+                INSERT OR REPLACE INTO journals (journal_name, quartile, is_exact_match)
+                VALUES (?, ?, ?)
+                """,
+                (data["journal_name"], data["quartile"], 1 if data.get("is_exact_match", True) else 0),
+            )
+        self.conn.commit()
+
+    def get_journal_quartile(self, journal_name: str) -> Optional[str]:
+        """Get quartile for a journal name."""
+        cursor = self.conn.cursor()
+        cursor.execute(
+            "SELECT quartile FROM journals WHERE journal_name = ?",
+            (journal_name,)
+        )
+        result = cursor.fetchone()
+        return result[0] if result else None
+
+    def get_journals_as_dataframe(self) -> pd.DataFrame:
+        """Get all journals as a DataFrame."""
+        query = "SELECT journal_name, quartile, is_exact_match FROM journals"
+        return pd.read_sql_query(query, self.conn)
 
     def close(self):
         """Close database connection."""

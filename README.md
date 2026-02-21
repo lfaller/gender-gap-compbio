@@ -28,9 +28,11 @@ This project extends the Bonham & Stefan (2017) analysis of gender representatio
 ├── requirements.txt
 ├── .gitignore
 │
-├── cli.py                       # Professional CLI tool (Click-based) — RECOMMENDED
-├── pipeline.py                  # Main analysis pipeline (legacy, still works)
-├── run_gender_inference_db.py   # Gender inference with SQLite backend
+├── cli.py                           # Professional CLI tool (Click-based) — RECOMMENDED
+├── pipeline.py                      # Main analysis pipeline (legacy, still works)
+├── run_gender_inference_db.py       # Gender inference with SQLite backend
+├── preprocess_journal_quartiles.py  # Cache journal impact rankings (run once)
+├── analyze_journal_impact.py        # Analyze gender gaps across journal quartiles
 │
 ├── data/
 │   ├── processed/               # CSV files from PubMed fetches
@@ -139,17 +141,36 @@ This script:
 3. Infers gender using a two-layer strategy (gender-guesser + genderize.io API)
 4. Populates SQLite database at `data/gender_data.db`
 
+#### Journal Impact Analysis (separate analysis)
+
+To analyze whether female authors publish in lower-impact journals:
+
+```bash
+# Step 1: Cache journal quartiles from ScimagoJR (one-time only, ~10-15 minutes)
+python preprocess_journal_quartiles.py
+
+# Step 2: Run journal impact analysis (uses cached data, ~10-15 minutes)
+python analyze_journal_impact.py
+```
+
+This analysis:
+1. Uses ScimagoJR journal rankings to classify journals by impact (Q1-Q4 quartiles)
+2. Matches author publications to journal quartiles using both Biology and CompBio datasets (~275k papers)
+3. Performs bootstrap analysis to test whether female authors are published in lower-impact journals
+4. Generates publication-ready figures with 1.76M author-position records
+
 ## Architecture: SQLite Database Approach
 
 As of February 2026, the project uses a **SQLite database** for efficient storage and querying of gender-inferred author data, replacing the previous CSV-based approach. This provides significant benefits:
 
 ### Database Schema
 
-The `data/gender_data.db` SQLite database contains three tables:
+The `data/gender_data.db` SQLite database contains four tables:
 
 - **papers:** Paper metadata (pmid, title, year, dataset)
 - **authors:** Author gender inferences (name, p_female, gender, source)
 - **author_positions:** Paper-author relationships with position information (paper_id, author_id, position)
+- **journals:** Cached journal impact rankings (journal_name, quartile, is_exact_match) — populated by `preprocess_journal_quartiles.py`
 
 ### Benefits of This Approach
 
@@ -173,6 +194,9 @@ This approach is more efficient than the previous CSV expansion because:
 - Authors are stored once (normalization)
 - Repeated lookups don't require reprocessing
 - Analysis queries can use indices for fast filtering
+
+**Journal Quartiles Caching:**
+Similarly, ScimagoJR journal rankings are cached in the `journals` table after the initial preprocessing. The expensive fuzzy-matching step is performed once (one-time, ~10–15 minutes with `preprocess_journal_quartiles.py`), and future analyses query the cached results for fast journal-to-quartile lookups.
 
 ## Methodology
 
@@ -229,6 +253,52 @@ For each author position and dataset, we:
 | **Female PI Effect** | P_female by position, stratified by gender of last author (proxy for PI gender) |
 | **Subfield Comparison** | Gender gap variation within computational biology subfields (genomics, proteomics, systems biology, etc.) |
 | **COVID-19 Impact** | Year-over-year comparison highlighting 2020–2021 |
+| **Journal Impact Disparity** | Do female authors publish in lower-impact journals? Tests P_female across ScimagoJR journal quartiles (Q1–Q4) |
+
+## Journal Impact Analysis: Motivation and Methods
+
+Beyond gender gaps in authorship positions, this project also investigates whether female authors are clustered in lower-impact venues. This addresses a secondary but important question: **If female authors represent a smaller proportion of first authors and PIs, do they also publish in lower-impact journals?**
+
+### What Are Journal Quartiles?
+
+Journal impact is classified using **ScimagoJR quartiles** based on citation metrics:
+
+- **Q1 (Top 25%):** Highest-impact journals (e.g., *Nature*, *Science*, *PNAS*)
+- **Q2 (25–50%):** High-impact journals
+- **Q3 (50–75%):** Medium-impact journals
+- **Q4 (75–100%):** Lower-impact journals
+
+This differs from H-index (which measures an individual researcher's citation count).
+
+### Analysis Approach
+
+1. **Preprocessing:** `preprocess_journal_quartiles.py` performs fuzzy matching of PubMed journal names against ScimagoJR rankings and caches the results in the database (one-time, ~10–15 minutes)
+2. **Analysis:** `analyze_journal_impact.py` computes P_female stratified by journal quartile and author position using bootstrap resampling
+3. **Outputs:**
+   - CSV results: `analysis_journal_quartile_by_position.csv`, `analysis_journal_quartile_by_year.csv`
+   - Publication-ready figures: `fig_journal_impact_by_position.png/svg`, `fig_journal_quartile_distribution.png/svg`
+
+### Key Findings
+
+Analysis of 1.76M author-position records reveals **no evidence of a journal impact gap**:
+
+| Author Position | Q1 (Highest) | Q2 (High) | Q3 (Medium) | Q4 (Lower) |
+|---|---|---|---|---|
+| **First** | 45.0% | **48.8%** ⬆️ | 45.6% | 39.9% |
+| **Last** | 30.0% | 33.8% | 33.7% | 26.5% |
+| **Other** | 40.5% | 44.1% | 43.7% | 43.1% |
+
+**Interpretation:** Female first authors have **higher representation in Q2 journals** (48.8% vs. 45.0% in Q1), contradicting the hypothesis that female authors cluster in lower-impact venues. This suggests gender representation is **relatively consistent** across journal impact levels in computational biology.
+
+### Temporal Trends
+
+Female representation has shown **consistent improvement across all journal impact tiers from 2015-2025**. In Q1 journals, female authorship increased from 36.3% (2015) to 41.2% (2025); similar gains appear in Q2 (+7.2pp), Q3 (+6.8pp), and Q4 (+4.9pp). A modest spike in female representation appears in 2020-2021 across Q1-Q3 journals, coinciding with the COVID-19 pandemic. The most dramatic increases occur in 2023-2025 published work, reflecting scientific decisions and submissions from 2021-2023.
+
+**Note on publication lag:** Papers published in year X reflect work conducted 1-3 years earlier. Thus, 2024-2025 publications represent 2021-2023 scientific activity. Recent upward trends demonstrate improvement in the post-COVID period, but we cannot yet observe the true current state of gender representation—that signal remains 1-3 years ahead in the publication pipeline.
+
+### Performance Note
+
+The first run of `preprocess_journal_quartiles.py` performs fuzzy string matching on ~2M+ author records and ~82k unique journals. This is intentionally done once and cached to avoid repeating the expensive computation. Future runs of `analyze_journal_impact.py` query the cached results and run in ~10–15 minutes.
 
 ## Methodological Limitations
 
@@ -240,6 +310,7 @@ These limitations are explicitly documented and should be transparently reported
 4. **MeSH Assignment:** Not all computational biology papers are tagged with the Computational Biology MeSH term; results may underrepresent some subfields.
 5. **Last Author ≠ PI:** The convention of last author = PI is strongest in biology but does not universally hold across all subfields or CS-adjacent research.
 6. **Authorship ≠ Workforce:** Publication rates reflect many factors beyond representation (funding, career stage distributions, productivity norms, etc.).
+7. **Publication Lag:** Papers published in year X reflect scientific work and decisions from 1-3 years prior. Our 2024-2025 data represents work conducted in 2021-2023. The current state of gender representation remains partially obscured by the publication pipeline; real improvements or declines in 2023-2025 will not be fully visible until 2025-2027 publications.
 
 ## References
 

@@ -26,6 +26,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - New `run_gender_inference_db.py` script for gender inference with database persistence
   - Proper schema with papers, authors, and author_positions tables
   - Indices for fast queries on year, dataset, gender, and position fields
+- **Journal Impact Analysis:** New analysis investigating gender gaps across journal quartiles
+  - `preprocess_journal_quartiles.py`: Caches ScimagoJR journal rankings using fuzzy matching (one-time preprocessing)
+  - `analyze_journal_impact.py`: Analyzes P_female by journal quartile and author position
+  - New `journals` table in SQLite for fast journal-to-quartile lookups
+  - Publication-ready figures showing female representation across Q1–Q4 journals
 - **Unified Pipeline Script:** Consolidated Jupyter notebooks into `pipeline.py` for better reproducibility
   - Command-line interface with `--skip-fetch` and `--figures-only` options
   - Modular step functions for each pipeline stage
