@@ -57,6 +57,28 @@ Comprehensive gender classification of 977,731 authors from PubMed/Semantic Scho
 
 This multi-strategy approach successfully recovered ~94% of initially-failed classifications.
 
+## Data Filtering for Analysis
+
+### Initial-First Names Filtering
+**Rationale:** Names that begin with a single letter (e.g., "A Smith", "J Johnson") are inherently ambiguous for gender classification. These names lack contextual information that would allow reliable gender inference.
+
+**Scope of Filtering:**
+- **Names affected:** 60,903 authors (6.2% of total)
+- **Remaining for analysis:** 916,828 authors (93.8%)
+
+**Impact Analysis:**
+| Metric | Full Dataset | Filtered Dataset | Change |
+|--------|-------------|-----------------|--------|
+| Total authors | 977,731 | 916,828 | -60,903 (-6.2%) |
+| Male | 569,108 (58.2%) | 525,169 (57.3%) | -0.93pp |
+| Female | 400,227 (40.9%) | 386,621 (42.2%) | +1.24pp |
+| Unknown | 6,488 (0.7%) | 3,878 (0.4%) | -2,610 removed |
+| Male/Female ratio | 1.422 | 1.358 | -4.5% |
+
+**Conclusion:** Filtering removes only 6.2% of names with minimal impact on gender distributions (< 1.3pp change), while significantly improving data quality and interpretability for gender gap analysis.
+
+**Recommendation:** Use the **filtered dataset (916,828 authors)** for all gender gap analyses to ensure robust and interpretable results.
+
 ## Edge Cases & Limitations
 
 ### Remaining Unknowns (6,391 names)
@@ -97,5 +119,16 @@ Likely due to:
 - **Total cost:** ~$0.18 for 98.4% classification coverage
 - **ROI:** ~2.3M names classified per dollar
 
+## Analysis Dataset Recommendation
+
+For gender gap research and statistical analysis:
+- **Recommended dataset:** Filtered (916,828 authors, excluding initial-first names)
+- **Alternative dataset:** Full (977,731 authors, if comprehensive coverage is priority)
+- **Excluded:** 60,903 initial-first names due to inherent classification ambiguity
+
+See "Data Filtering for Analysis" section above for detailed impact metrics.
+
 ## Conclusion
-The LLM-based batch classification strategy successfully achieved 98.4% coverage of previously-unknown author genders at minimal cost. The remaining 1.6% represent genuinely ambiguous cases that would require manual review or more sophisticated multi-modal approaches. This provides a high-quality, scalable solution for gender gap analysis in bibliometric research.
+The LLM-based batch classification strategy successfully achieved 98.4% coverage of previously-unknown author genders at minimal cost. The remaining 1.6% represent genuinely ambiguous cases that would require manual review or more sophisticated multi-modal approaches.
+
+By filtering out initial-first names (6.2% of data), we retain a high-quality dataset of 916,828 authors with robust gender classifications, minimizing ambiguity while maintaining statistical representativeness. This provides a high-quality, scalable solution for gender gap analysis in bibliometric research.

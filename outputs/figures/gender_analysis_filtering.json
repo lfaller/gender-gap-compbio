@@ -1,0 +1,48 @@
+{
+  "full_dataset": {
+    "total": 977731,
+    "breakdown": {
+      "male": 569108,
+      "female": 400227,
+      "unknown": 6488,
+      "other": 1908
+    },
+    "percentages": {
+      "male_pct": 58.20701194909438,
+      "female_pct": 40.93426515063959,
+      "unknown_pct": 0.6635772006819872,
+      "other_pct": 0.19514569958403694
+    },
+    "remaining_unknowns": 6488,
+    "male_female_ratio": 1.421963035977083
+  },
+  "filtered_dataset": {
+    "total": 916828,
+    "breakdown": {
+      "male": 525169,
+      "female": 386621,
+      "unknown": 3878,
+      "other": 1160
+    },
+    "percentages": {
+      "male_pct": 57.28108216590244,
+      "female_pct": 42.16941454667615,
+      "unknown_pct": 0.422980100956777,
+      "other_pct": 0.12652318646463676
+    },
+    "remaining_unknowns": 3878,
+    "male_female_ratio": 1.3583561161964819
+  },
+  "filtering_impact": {
+    "names_removed": 60903,
+    "percent_removed": 6.229013910779141,
+    "male_percentage_point_change": -0.9259297831919397,
+    "female_percentage_point_change": 1.2351493960365616,
+    "ratio_change_percent": -4.473176740272606
+  },
+  "methodology": {
+    "filter_description": "Exclude authors whose name starts with a single letter (initial)",
+    "rationale": "Initial-first names (e.g., \"A Smith\") are inherently ambiguous for gender classification as they lack contextual information. Removing these 6.2% of names improves data quality.",
+    "impact": "Minimal impact on overall gender distribution while significantly improving classification reliability"
+  }
+}
