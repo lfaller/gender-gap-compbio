@@ -56,28 +56,33 @@ We assessed the reliability of unclassified names through two validation approac
 
 **Successful Classification Examples:** To demonstrate the robustness of our hybrid approach, we confirmed successful classification across challenging name categories:
 - International names: Chen Qiao (female, Mandarin), Behrooz Torabi Moghadam (male, Persian)
-- Names with diacritical marks: Léo Pioger (male, French), A-C Müller (male, German)
+- Names with diacritical marks: Léo Pioger (male, French), María José García (female, Spanish)
 - Complex name structures: Q J Peng (male), M Karlsson (male)
 - Mononymous names: Shana Thomas (female), Bettina Schuppelius (female)
 
 ### Data Filtering and Inclusion Criteria
 
-**Initial-First Name Exclusion:** We identified 60,903 authors (6.2% of the total cohort) whose first name component consisted of a single letter (e.g., "A Smith", "J Johnson"). These initial-only names lack sufficient contextual information for reliable gender inference and introduce systematic ambiguity independent of classification methodology.
+**Ambiguous Initial Name Exclusion:** We identified 62,417 authors (6.4% of the total cohort) whose first name component consisted of initials or initial-like patterns that lack sufficient contextual information for reliable gender inference. This category includes:
+- Simple initials: "A Smith", "J Johnson" (60,903 authors)
+- Hyphenated initials: "A-C Smith", "W-D Xi" (1,321 authors)
+- Initials with punctuation: "A. Smith", "A' Smith", "J'Nan Wittler" (193 authors)
 
-To assess the impact of excluding these 60,903 names, we conducted a comparative analysis:
+These initial variants are functionally equivalent in terms of gender inference ambiguity (e.g., "A-C" could represent "Anton-Claus" [male] or "Anne-Carolina" [female]) and introduce systematic ambiguity independent of classification methodology.
+
+To assess the impact of excluding all initial variants, we conducted a comparative analysis:
 
 | Metric | Full Dataset | Filtered Dataset | Absolute Change | Percentage Change |
 |--------|-------------|-----------------|-----------------|-------------------|
-| Total authors | 977,731 | 916,828 | -60,903 | -6.2% |
-| Male (count) | 569,108 | 525,169 | -43,939 | -7.7% |
-| Male (%) | 58.2% | 57.3% | -0.93 pp | -1.6% |
-| Female (count) | 400,227 | 386,621 | -13,606 | -3.4% |
-| Female (%) | 40.9% | 42.2% | +1.24 pp | +3.0% |
-| Unknown (count) | 6,488 | 3,878 | -2,610 | -40.2% |
-| Unknown (%) | 0.7% | 0.4% | -0.25 pp | -35.7% |
-| Male/Female ratio | 1.422 | 1.358 | -0.064 | -4.5% |
+| Total authors | 977,731 | 915,314 | -62,417 | -6.4% |
+| Male (count) | 569,108 | 524,066 | -45,042 | -7.9% |
+| Male (%) | 58.2% | 57.3% | -0.95 pp | -1.6% |
+| Female (count) | 400,227 | 386,335 | -13,892 | -3.5% |
+| Female (%) | 40.9% | 42.2% | +1.27 pp | +3.1% |
+| Unknown (count) | 6,488 | 3,779 | -2,709 | -41.7% |
+| Unknown (%) | 0.7% | 0.4% | -0.27 pp | -38.6% |
+| Male/Female ratio | 1.422 | 1.357 | -0.065 | -4.6% |
 
-The filtering of initial-first names resulted in minimal changes to gender proportion estimates (<1.3 percentage points) while substantially improving classification reliability. Subsequent analyses presented herein used the filtered dataset of 916,828 authors unless otherwise specified.
+The filtering of all initial variants (simple, hyphenated, and punctuated) resulted in minimal changes to gender proportion estimates (<1.3 percentage points) while substantially improving classification reliability. The expanded filtering removed an additional 1,514 hyphenated and punctuated initial names beyond the simple initials, with negligible impact on the overall gender distribution (-0.03pp for male, +0.04pp for female). Subsequent analyses presented herein used the filtered dataset of 915,314 authors unless otherwise specified.
 
 ### Statistical Approach
 
