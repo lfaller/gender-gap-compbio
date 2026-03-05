@@ -30,10 +30,10 @@ print(f"✓ Loaded gender cache with {len(gi.cache)} entries\n")
 
 # Load all datasets
 print("Loading paper data...")
-bio_df = pd.read_csv("data/processed/pubmed_biology_2015_2024.csv")
-comp_df = pd.read_csv("data/processed/pubmed_compbio_2015_2024.csv")
-qbio_df = pd.read_csv("data/processed/arxiv_qbio_2015_2024.csv")
-cs_df = pd.read_csv("data/processed/arxiv_cs_2015_2024.csv")
+bio_df = pd.read_csv("data/processed/pubmed_biology_2015_2025.csv")
+comp_df = pd.read_csv("data/processed/pubmed_compbio_2015_2025.csv")
+qbio_df = pd.read_csv("data/processed/arxiv_qbio_2015_2025.csv")
+cs_df = pd.read_csv("data/processed/arxiv_cs_2015_2025.csv")
 
 pubmed_df = pd.concat([bio_df, comp_df], ignore_index=True)
 arxiv_df = pd.concat([qbio_df, cs_df], ignore_index=True)

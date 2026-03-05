@@ -29,7 +29,6 @@ This project extends the Bonham & Stefan (2017) analysis of gender representatio
 ├── .gitignore
 │
 ├── cli.py                           # Professional CLI tool (Click-based) — RECOMMENDED
-├── pipeline.py                      # Main analysis pipeline (legacy, still works)
 ├── run_gender_inference_db.py       # Gender inference with SQLite backend
 ├── preprocess_journal_quartiles.py  # Cache journal impact rankings (run once)
 ├── analyze_journal_impact.py        # Analyze gender gaps across journal quartiles
@@ -69,12 +68,21 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 3. Add NCBI API Key
-Register for a free NCBI API key at https://www.ncbi.nlm.nih.gov/account/ and add it to your environment:
+### 3. Add API Keys
+Register for free API keys and add them to your environment:
 
 ```bash
-export NCBI_API_KEY="your_api_key_here"
+# NCBI API key (for PubMed data fetching)
+export ENTREZ_EMAIL="your_email@example.com"  # Required for NCBI API
+
+# Groq API key (for LLM-based gender classification of unknown names)
+# Required for full reproducibility; get key at https://console.groq.com/
+export GROQ_API_KEY="your_groq_api_key_here"
 ```
+
+**Note:** The Groq API key is optional for basic analysis but required for:
+- Classifying unknown author names (cost: ~$0.54 for 392,610 names)
+- Full end-to-end reproducibility of the published results
 
 ### 4. Run the Analysis Pipeline
 
@@ -107,33 +115,38 @@ python cli.py analyze --help
 ```
 
 **Workflow with CLI:**
-1. `python cli.py fetch --start-year 2025 --end-year 2025 --append` (fetch new data)
+1. `python cli.py fetch --start-year 2015 --end-year 2025` (fetch PubMed data)
 2. `python run_gender_inference_db.py` (infer gender for unique authors)
 3. `python cli.py analyze` (run statistical analysis)
 4. `python cli.py figures` (generate publication-ready figures)
 
-#### Option B: Legacy Pipeline — `pipeline.py`
+#### Gender Inference (Step 2)
 
-Simple monolithic script (still works):
+The gender inference pipeline has two phases:
 
-```bash
-# Full pipeline
-python pipeline.py
-
-# Skip data fetching (use cached data)
-python pipeline.py --skip-fetch
-
-# Generate figures only
-python pipeline.py --figures-only
-```
-
-#### Gender Inference (separate step)
-
-Run this anytime to infer gender and populate the SQLite database:
-
+**Phase 1: Offline classification**
 ```bash
 python run_gender_inference_db.py
 ```
+This uses the `gender-guesser` database to classify ~58% of author names offline.
+
+**Phase 2: LLM-based classification of unknown names (optional but recommended)**
+
+After Phase 1, if you have a Groq API key, classify remaining unknown names via LLM:
+
+```bash
+# First pass: classify unknowns using Groq API (free tier exploration)
+python classify_names.py
+
+# Second pass: retry with improved JSON parsing to recover missed names
+python classify_names_retry.py
+```
+
+These scripts classify unknown names at minimal cost (~$0.54 total). Without this step, ~1.6% of author names remain unclassified.
+
+**How gender classification works:**
+- Tier 1 (offline): gender-guesser database (~45k Western names)
+- Tier 2 (optional): Groq LLM API (llama-3.1-8b) for remaining unknowns, with three-phase processing and robust JSON parsing
 
 This script:
 1. Loads paper data from CSV files

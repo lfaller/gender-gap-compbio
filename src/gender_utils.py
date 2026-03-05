@@ -1,9 +1,9 @@
 """
-Gender inference utilities using a layered strategy.
+Gender inference utilities using gender-guesser.
 
 Layer 1: gender-guesser (offline, ~45k names)
-Layer 2: genderize.io API (fallback for unknowns)
 
+Unknown names should be classified using the Groq LLM pipeline (classify_names.py).
 All lookups are cached in data/gender_cache.json to avoid redundant API calls.
 """
 
@@ -11,7 +11,6 @@ import json
 import os
 from typing import Dict, Optional
 import gender_guesser.detector as gender
-import requests
 from pathlib import Path
 
 
@@ -48,12 +47,12 @@ class GenderInference:
 
     def infer_gender(self, first_name: str) -> Dict:
         """
-        Infer gender from a first name.
+        Infer gender from a first name using gender-guesser.
 
         Returns dict with keys: name, gender, probability, source
         - gender: 'male', 'female', or 'unknown'
         - probability: float in [0.0, 1.0] or None for unknown
-        - source: 'gender-guesser', 'genderize', or None
+        - source: 'gender-guesser' or None
 
         Args:
             first_name: First name to infer gender from
@@ -105,46 +104,17 @@ class GenderInference:
                 "source": "gender-guesser"
             }
         else:
-            # Layer 2: genderize.io API for unknowns
-            out = self._query_genderize(first_name)
+            # Unknown: should be classified by Groq LLM pipeline (classify_names.py)
+            out = {
+                "name": first_name,
+                "gender": "unknown",
+                "probability": None,
+                "source": None
+            }
 
         # Cache the result
         self.cache[first_name] = out
         return out
-
-    def _query_genderize(self, first_name: str) -> Dict:
-        """
-        Query genderize.io API for gender inference.
-
-        Only called for names gender-guesser couldn't resolve.
-
-        Args:
-            first_name: First name to infer gender from
-
-        Returns:
-            Dict with gender inference result
-        """
-        try:
-            r = requests.get(f"https://api.genderize.io?name={first_name}")
-            data = r.json()
-
-            # Only accept if probability >= 0.7
-            if data.get("gender") and data.get("probability", 0) >= 0.7:
-                return {
-                    "name": first_name,
-                    "gender": data["gender"],
-                    "probability": data["probability"],
-                    "source": "genderize"
-                }
-        except Exception:
-            pass
-
-        return {
-            "name": first_name,
-            "gender": "unknown",
-            "probability": None,
-            "source": None
-        }
 
     def infer_batch(self, first_names: list) -> list:
         """
