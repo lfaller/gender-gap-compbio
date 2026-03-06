@@ -2,6 +2,7 @@
 Bootstrap statistical analysis for P_female estimates.
 
 Replicates the original Bonham & Stefan (2017) statistical approach.
+https://doi.org/10.1371/journal.pcbi.1005134
 """
 
 from typing import Tuple, List, Optional

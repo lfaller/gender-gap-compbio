@@ -115,9 +115,9 @@ Use the estimates to create an "adjusted" version of your analysis that includes
 
 **Your 40% unknown rate is not a fatal flaw.** It's:
 - ✓ Understandable (tool limitations for non-Latin scripts)
-- ✓ Well-documented (gender-guesser + genderize.io are open-source)
+- ✓ Well-documented (gender-guesser is open-source, Groq LLM approach with advanced parsing is transparent)
 - ✓ Not systematically biasing results (unknowns are slightly male-skewed, so exclusion is conservative)
-- ✓ Comparable to the original paper (Bonham & Stefan had ~26.6% unknown, similar tools)
+- ✓ Comparable to the original paper ([Bonham & Stefan](https://doi.org/10.1371/journal.pcbi.1005134) had ~26.6% unknown, similar tools)
 
 **You can publish with full confidence** if you add this analysis to your methodology section.
 

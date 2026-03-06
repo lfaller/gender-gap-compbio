@@ -9,7 +9,7 @@
 
 Right now, BWIB is collecting community data through our landscape survey (asking women in bioinformatics directly about their experiences, barriers, and aspirations). But while we listen to our community, we also wanted to know: what does the *published* literature actually tell us about where we've been?
 
-Eight years ago, two researchers named Bonham and Stefan published a landmark paper in *PLoS Computational Biology* that answered a simple question: Are women underrepresented in computational biology authorship? Their answer was yes. But it's 2026 now. Does their finding still hold? What has changed, and what hasn't?
+Eight years ago, two researchers named [Bonham and Stefan published a landmark paper](https://doi.org/10.1371/journal.pcbi.1005134) in *PLoS Computational Biology* that answered a simple question: Are women underrepresented in computational biology authorship? Their answer was yes. But it's 2026 now. Does their finding still hold? What has changed, and what hasn't?
 
 I decided to replicate their 2017 analysis with a decade of new data through 2025, and the results are both encouraging and sobering.
 
@@ -17,7 +17,7 @@ I decided to replicate their 2017 analysis with a decade of new data through 202
 
 ## What We Knew in 2017
 
-Bonham and Stefan's 2017 study examined gender representation across biology, computational biology, and computer science using PubMed and arXiv data spanning 1997–2014. Their key findings:
+[Bonham and Stefan's 2017 study](https://doi.org/10.1371/journal.pcbi.1005134) examined gender representation across biology, computational biology, and computer science using PubMed and arXiv data spanning 1997–2014. Their key findings:
 
 - **Female authorship in computational biology lagged biology by 4–6 percentage points** across all author positions
 - **Female first authors in comp bio: ~32% | Last authors: ~21%** (a gap of 11 percentage points)
@@ -65,7 +65,7 @@ The pattern is striking: female representation drops sharply in the last two aut
 
 ### The Female PI Effect: Still Present
 
-One of Bonham and Stefan's most interesting findings was the "female PI effect": papers with a female last author tended to have more female co-authors across all positions. This suggested a multiplier effect; women in senior positions actively recruit and support women at earlier career stages.
+One of [Bonham and Stefan's](https://doi.org/10.1371/journal.pcbi.1005134) most interesting findings was the "female PI effect": papers with a female last author tended to have more female co-authors across all positions. This suggested a multiplier effect; women in senior positions actively recruit and support women at earlier career stages.
 
 I tested this hypothesis in the current dataset and found it still holds. Papers where the last author (presumed PI) is female show higher female representation at every position compared to papers with male last authors. This is an important and hopeful finding: women in power in computational biology are practicing inclusive leadership.
 
@@ -123,13 +123,12 @@ Progress isn't inevitable. It's the result of people who care enough to ask ques
 
 ## How We Did This
 
-We analyzed **274,702 PubMed publications** (2015–2025) from both Biology (`"Biology"[Mesh]`) and Computational Biology (`"Computational Biology"[Majr]`) datasets. We identified **977,731 unique authors** and inferred gender using a hybrid three-layer approach:
+We analyzed **274,702 PubMed publications** (2015–2025) from both Biology (`"Biology"[Mesh]`) and Computational Biology (`"Computational Biology"[Majr]`) datasets. We identified **977,731 unique authors** and inferred gender using a hybrid two-tier approach:
 
 1. **Offline gender database** (gender-guesser, ~45k names)
-2. **Online API approach** (genderize.io) for unresolved names
-3. **LLM-based classification** (Groq llama-3.1-8b-instant) for remaining unknowns using batch processing with advanced JSON parsing strategies
+2. **LLM-based classification** (Groq llama-3.1-8b-instant) for remaining unknowns using batch processing with advanced JSON parsing strategies
 
-For the LLM phase, we processed 392,610 unknown names through a three-stage pipeline: free API tier testing (5.6% coverage), paid tier scaling (93.4% coverage), and improved parsing recovery (93.8% coverage). The approach employed robust error handling with 4-level fallback strategies (direct JSON parsing → markdown code block extraction → auto-fix formatting → regex-based extraction) to achieve 98.4% overall classification coverage at minimal cost (~$0.18).
+For the Groq LLM-based tier, we processed 392,610 unknown names through a three-phase pipeline: free API tier testing (5.6% coverage), paid tier scaling (93.4% coverage), and improved parsing recovery (93.8% coverage). The approach employed robust error handling with 4-level fallback strategies (direct JSON parsing → markdown code block extraction → auto-fix formatting → regex-based extraction) to achieve 98.4% overall classification coverage. The total cost was **$0.54** (3.4M input tokens + 4.6M output tokens).
 
 For data quality, we excluded **initial-first names** (6.2% of dataset: names where the first word is a single letter) as these are inherently ambiguous for gender inference. The resulting filtered dataset of **916,828 authors** retained high statistical power while improving classification reliability.
 

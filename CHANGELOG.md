@@ -45,6 +45,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Better error handling and progress reporting
 
 ### Changed
+- **Documentation:** Added explicit DOI links to landmark Bonham & Stefan (2017) paper
+  - All references now include direct links to https://doi.org/10.1371/journal.pcbi.1005134
+  - Improves discoverability and citation tracking across README, blog posts, source code, and docs
 - **Dependencies:** Updated `requirements.txt` with missing CLI dependencies
   - Added `click>=8.0.0` (required by `cli.py`)
   - Added `groq>=0.4.0` (required by `classify_names.py` for LLM-based classification)
@@ -154,7 +157,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Historical Notes
 
-This project replicates and extends the landmark study by Bonham & Stefan (2017) on gender representation in computational biology. The analysis was originally conducted through January 2017, and this update extends it through December 2024.
+This project replicates and extends the landmark study by [Bonham & Stefan (2017)](https://doi.org/10.1371/journal.pcbi.1005134) on gender representation in computational biology. The analysis was originally conducted through January 2017, and this update extends it through December 2024.
 
 ### Key Milestones
 

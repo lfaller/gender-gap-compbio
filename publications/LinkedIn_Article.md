@@ -1,6 +1,6 @@
 # We Updated the 2017 Study on Women in Computational Biology
 
-In 2017, Bonham & Stefan found women made up just 21% of last authors in computational biology. Eight years later, I replicated the analysis with a decade of new data (2015–2025).
+In 2017, [Bonham & Stefan](https://doi.org/10.1371/journal.pcbi.1005134) found women made up just 21% of last authors in computational biology. Eight years later, I replicated the analysis with a decade of new data (2015–2025).
 
 **The progress:** Female representation grew from 37.3% → 42.3%. That's **10x faster** than the pace before 2017. 📈
 

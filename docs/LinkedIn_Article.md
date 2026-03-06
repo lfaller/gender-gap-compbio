@@ -6,7 +6,7 @@
 
 ## The Finding That Started It All
 
-In 2017, Bonham and Stefan published a pivotal paper showing that computational biology lagged biology overall in female authorship. Their conclusion was stark: women were underrepresented, and at the current pace of change, closing the gap would take *decades*.
+In 2017, [Bonham and Stefan published a pivotal paper](https://doi.org/10.1371/journal.pcbi.1005134) showing that computational biology lagged biology overall in female authorship. Their conclusion was stark: women were underrepresented, and at the current pace of change, closing the gap would take *decades*.
 
 Eight years later, with a decade of new data now available, I decided to replicate their analysis. The results surprised me.
 

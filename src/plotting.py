@@ -2,6 +2,7 @@
 Visualization utilities for publication-ready figures.
 
 Generates figures matching the style of the original Bonham & Stefan (2017) paper.
+https://doi.org/10.1371/journal.pcbi.1005134
 """
 
 from typing import Dict, List
