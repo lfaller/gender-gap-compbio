@@ -1,0 +1,67 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__
+*.py[cod]
+*.so
+.Python
+venv/
+env/
+.venv
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual environments
+.env
+.env.local
+.venv
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Testing & CI
+.github/
+.gitlab-ci.yml
+.travis.yml
+Makefile
+pytest.ini
+coverage/
+.coverage
+
+# Documentation
+docs/
+*.md
+LICENSE
+
+# Local development
+local/
+outputs/figures/
+
+# Large data files (users should provide via volume or download)
+data/raw/
+data/processed/*.csv
+data/processed/*.db
+data/*.db
+data/gender_cache.json
+
+# Misc
+*.pid
+*.log
+classify_output.log
+classify_retry.log
+classify_run.log
+monitor_progress.sh

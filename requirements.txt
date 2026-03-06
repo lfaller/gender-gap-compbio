@@ -1,4 +1,5 @@
-# Environment & Configuration
+# CLI & Environment
+click>=8.0.0
 python-dotenv>=1.0.0
 
 # Data Collection
@@ -9,6 +10,7 @@ tenacity>=8.2.3
 
 # Gender Inference
 gender-guesser>=0.4.0
+groq>=0.4.0
 
 # Data Processing & Analysis
 pandas>=2.0.0
@@ -24,5 +26,3 @@ plotly>=5.14.0
 # Jupyter
 jupyter>=1.0.0
 ipython>=8.12.0
-
-dotenv

@@ -86,6 +86,37 @@ export GROQ_API_KEY="your_groq_api_key_here"
 
 ### 4. Run the Analysis Pipeline
 
+#### Using Docker (Recommended for Reproducibility)
+
+For a containerized, reproducible environment:
+
+```bash
+# Build Docker image
+docker build -t gender-gap-compbio .
+
+# Run analysis (requires pre-built data/gender_data.db)
+docker run --rm \
+  -v $(pwd)/data:/app/data \
+  -v $(pwd)/outputs:/app/outputs \
+  gender-gap-compbio analyze
+
+# Generate figures
+docker run --rm \
+  -v $(pwd)/outputs:/app/outputs \
+  -v $(pwd)/data:/app/data \
+  gender-gap-compbio figures
+
+# Or use Make shortcuts
+make docker-build
+make docker-run ENTREZ_EMAIL=your.email@example.com
+```
+
+See [DOCKER.md](DOCKER.md) for full Docker documentation, including `docker-compose` usage and development workflows.
+
+#### Local Installation
+
+Alternatively, run directly on your machine:
+
 #### Option A: CLI Tool (Recommended) — `cli.py`
 
 Professional command-line interface with flexible parameters:
