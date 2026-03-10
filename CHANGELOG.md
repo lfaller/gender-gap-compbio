@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-03-10
+
 ### Changed
 - **Date Range Extended:** Updated analysis to include 2025 data (2015–2025)
   - PubMed data now includes 430,000+ papers instead of 410,000
