@@ -186,7 +186,7 @@ The female PI effect tells us something encouraging: women in power in this fiel
 
 This analysis is open-source and reproducible. If you want to explore the data yourself, dive deeper into any finding, or extend this work to your own subfield or research question, the code and methodology are available on GitHub.
 
-And if you haven't already, **fill out the BWIB community survey**. The quantitative data I've presented here describes the published literature, but it doesn't capture the lived experiences of women in our field (the barriers you face, the support you need, the changes you want to see). That's what the survey is designed to capture, and it's equally important.
+And if you haven't already, **[fill out the BWIB community survey](https://forms.gle/jhKy3hpYPf1WtC2s8)**. The quantitative data I've presented here describes the published literature, but it doesn't capture the lived experiences of women in our field (the barriers you face, the support you need, the changes you want to see). That's what the survey is designed to capture, and it's equally important.
 
 Progress isn't inevitable. It's the result of people who care enough to ask questions, to measure what matters, and to act on what they find. That's what we're doing together.
 
