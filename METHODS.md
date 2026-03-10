@@ -97,6 +97,20 @@ Female representation at each author position and across temporal periods was ca
 
 ### Code and Data Availability
 
-Classification scripts, execution logs, and complete methodological documentation are available at: https://github.com/lfaller/gender-gap-compbio
+**Source Code:** Classification scripts, execution logs, and complete methodological documentation are available at: https://github.com/lfaller/gender-gap-compbio
 
-The gender_data.db SQLite database containing all 977,731 authors with gender classifications is available upon request.
+**Pre-processed Dataset:** The gender_data.db SQLite database containing all 977,731 authors with gender classifications is archived on Zenodo:
+- **Zenodo Record:** https://zenodo.org/records/18894714
+- **DOI:** 10.5281/zenodo.18894714
+
+This archive provides immediate access to the processed dataset without requiring PubMed re-fetching or re-classification. The database includes:
+- Complete author records with inferred gender probabilities (p_female scores)
+- Paper metadata (PMID, publication year, journal name)
+- Author position classifications (first, second, other, penultimate, last)
+
+Download the database using:
+```bash
+python scripts/download_zenodo_data.py
+```
+
+For full reproducibility (including data fetching and gender inference from scratch), see the main [README.md](./README.md).

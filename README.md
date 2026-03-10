@@ -9,6 +9,8 @@ Replicating and extending the landmark study by [Bonham & Stefan (2017)](https:/
 
 This project extends the [Bonham & Stefan (2017)](https://doi.org/10.1371/journal.pcbi.1005134) analysis of gender representation in computational biology through 2025, examines emerging trends (including the COVID-19 pandemic's impact), and investigates subfield-specific gender gaps.
 
+**For detailed methodology, classification procedures, and data validation:** See [METHODS.md](./METHODS.md)
+
 ## Published Blog Posts
 
 ### 1. **BWIB Deep Dive: Where Do We Stand?**
@@ -67,6 +69,7 @@ For faster reproduction without API calls, download the data from Zenodo and ext
 ├── README.md
 ├── LICENSE                      # MIT License
 ├── CHANGELOG.md                 # Release notes and version history
+├── METHODS.md                   # Author gender classification methodology
 ├── requirements.txt
 ├── .gitignore
 │
