@@ -221,4 +221,4 @@ Together, we're shifting the landscape.
 
 ---
 
-*Data through 2025 | Analysis of 274,702 papers and 977,731 authors | Code available on GitHub*
+*Data through 2025 | Analysis of 274,702 papers and 977,731 authors | Code available on [GitHub](https://github.com/lfaller/gender-gap-compbio)*
