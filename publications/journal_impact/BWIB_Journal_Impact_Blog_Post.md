@@ -37,7 +37,7 @@ Here's the result that I'm still digesting:
 
 **Female representation is remarkably consistent across journal impact tiers, and in some cases, women have *higher* representation in higher-impact journals.**
 
-Breaking down female representation by position and journal quartile:
+Breaking down female representation by position and journal quartile—specifically, the probability (P_female) that an author in each position is female:
 
 | Position | Q1 (Highest) | Q2 (High) | Q3 (Medium) | Q4 (Lower) |
 |----------|-------------|-----------|-----------|-----------|
@@ -49,7 +49,7 @@ Breaking down female representation by position and journal quartile:
 Notice what's happening here: **Q2 journals show higher female representation across almost every author position.** Female first authors in Q2 journals are 48.8%—nearly half! Compare that to Q1 (45.0%) or Q4 (39.9%).
 
 ![Female representation by journal quartile and author position](./fig_journal_impact_by_position.png)
-*Figure 1: P(Female) by Journal Quartile and Author Position. The red dashed line indicates 50% parity. Error bars show 95% confidence intervals. Notably, Q2 journals show higher female representation across most positions, and female representation is not lower in Q4 (lower-impact) journals than in Q1 (highest-impact) journals.*
+*Figure 1: P_female by Journal Quartile and Author Position. The red dashed line indicates 50% parity. Error bars show 95% confidence intervals. Notably, Q2 journals show higher female representation across most positions, and female representation is not lower in Q4 (lower-impact) journals than in Q1 (highest-impact) journals.*
 
 This is the *opposite* of what I expected. If women were systematically excluded from top-tier venues, I would expect to see higher female representation in Q4. Instead, we see the opposite.
 
@@ -150,7 +150,7 @@ We're not done. But we're moving in the right direction.
 
 We analyzed **1.76 million author-position records** from **274,702 PubMed publications** (2015–2025) across both Biology and Computational Biology datasets, utilizing **977,731 unique authors**. Gender classification employed our hybrid three-layer approach: offline gender databases, API-based inference, and LLM-based classification (Groq llama-3.1-8b-instant) for unknowns, achieving 99.1% overall coverage with 98.4% classification rate for previously unknown names. We excluded ambiguous initial names (6.4%, including simple, hyphenated, and punctuated initials) to improve classification reliability, resulting in a filtered analytical dataset of 915,314 authors.
 
-Each publication was mapped to a journal impact quartile using **ScimagoJR 2024 rankings** via fuzzy string matching (85.7% success rate). Note: All papers in the 2015–2025 analysis were classified using the same 2024 journal rankings snapshot, which means historical impact factors were not tracked year-by-year. This provides a consistent, contemporary view of which journals are high-impact but should be interpreted as a static classification. Female representation (P_female) for each quartile-position combination was estimated using **bootstrap resampling** with 1,000 iterations per group, with 95% confidence intervals calculated as the 2.5th and 97.5th percentiles.
+Each publication was mapped to a journal impact quartile using **ScimagoJR 2024 rankings** via fuzzy string matching (85.7% success rate). Note: All papers in the 2015–2025 analysis were classified using the same 2024 journal rankings snapshot, which means historical impact factors were not tracked year-by-year. This provides a consistent, contemporary view of which journals are high-impact but should be interpreted as a static classification. Female representation—the probability (P_female) that an author in each quartile-position combination is female—was estimated using **bootstrap resampling** with 1,000 iterations per group, with 95% confidence intervals calculated as the 2.5th and 97.5th percentiles.
 
 The temporal analysis tracked female representation across journal quartiles year-by-year, revealing consistent improvements and publication lag effects. For detailed methodology, data coverage statistics, sensitivity analyses, and full reproducible code, see the [Journal Impact Analysis documentation on GitHub](https://github.com/lfaller/gender-gap-compbio/blob/main/docs/JOURNAL_IMPACT_ANALYSIS.md).
 
