@@ -30,6 +30,77 @@ We wanted to know: have the last 10 years changed that trajectory?
 
 ---
 
+## Reproducing Bonham & Stefan with 2015–2025 Data
+
+To assess progress, I replicated the Bonham & Stefan analysis exactly, using their same methodology and figures, but applied to contemporary data spanning 2015–2025. Here are the results:
+
+### Figure 1A: Female Representation by Author Position
+
+![Fig1A: P(female) by author position](./Fig1A_position_breakdown.png)
+
+This figure directly replicates Bonham & Stefan's Fig 1A, comparing the probability that an author in a given position is female across Biology and Computational Biology. Our 2015–2025 data shows:
+
+**Table 1. Proportion of Female Authors (2015–2025)**
+
+| Dataset | Position | Mean | 95% CI Lower | 95% CI Upper |
+|---------|----------|------|-------------|-------------|
+| Biology | first | 0.470 | 0.468 | 0.473 |
+| Biology | second | 0.448 | 0.445 | 0.451 |
+| Biology | other | 0.420 | 0.419 | 0.422 |
+| Biology | penultimate | 0.319 | 0.316 | 0.322 |
+| Biology | last | 0.321 | 0.319 | 0.324 |
+| **Computational Biology** | **first** | **0.406** | **0.400** | **0.411** |
+| **Computational Biology** | **second** | **0.403** | **0.398** | **0.408** |
+| **Computational Biology** | **other** | **0.391** | **0.389** | **0.394** |
+| **Computational Biology** | **penultimate** | **0.274** | **0.269** | **0.278** |
+| **Computational Biology** | **last** | **0.272** | **0.268** | **0.276** |
+
+**Key observation:** Computational biology papers still show lower female representation than biology papers across all author positions. The gap has narrowed somewhat (from 4–6 percentage points in 2017 to 3–5 percentage points in 2025), but it persists.
+
+### Figure 1B: Temporal Trend in Female Authorship
+
+![Fig1B: P(female) over time](./Fig1B_temporal_trend.png)
+
+This replicates Bonham & Stefan's Fig 1B, showing how female representation has changed year-by-year. The improvement is evident: both biology and computational biology show upward trends from 2015 to 2025.
+
+### Figure 1C: The Female PI Effect
+
+![Fig1C: P(female) by PI gender](./Fig1C_pi_effect.png)
+
+This is one of the most striking findings from Bonham & Stefan: papers with a female last author (presumed principal investigator) have significantly more female co-authors at every position. We found this effect still holds in 2015–2025 data:
+
+**Table 2. Proportion of Female Authors by PI Gender (2015–2025)**
+
+| Dataset | Position | PI Gender | Mean | 95% CI Lower | 95% CI Upper |
+|---------|----------|-----------|------|-------------|-------------|
+| **Biology** |
+| first | Male | 0.445 | 0.440 | 0.449 |
+| first | Female | **0.575** | 0.569 | 0.582 |
+| second | Male | 0.425 | 0.421 | 0.429 |
+| second | Female | **0.527** | 0.521 | 0.533 |
+| other | Male | 0.405 | 0.403 | 0.407 |
+| other | Female | **0.484** | 0.481 | 0.487 |
+| penultimate | Male | 0.296 | 0.292 | 0.301 |
+| penultimate | Female | **0.385** | 0.379 | 0.391 |
+| **Computational Biology** |
+| first | Male | 0.378 | 0.372 | 0.384 |
+| first | Female | **0.516** | 0.505 | 0.528 |
+| second | Male | 0.383 | 0.377 | 0.390 |
+| second | Female | **0.484** | 0.472 | 0.495 |
+| other | Male | 0.379 | 0.376 | 0.382 |
+| other | Female | **0.451** | 0.446 | 0.456 |
+| penultimate | Male | 0.257 | 0.251 | 0.263 |
+| penultimate | Female | **0.332** | 0.320 | 0.344 |
+
+**The Female PI Effect: Quantified**
+
+- In **biology** papers with a male last author, first author is 44.5% female; with a female last author, it jumps to **57.5%** (a **13 percentage point increase**)
+- In **computational biology** papers with a male last author, first author is 37.8% female; with a female last author, it jumps to **51.6%** (a **13.8 percentage point increase**)
+
+This is remarkable and hopeful: women in senior positions in both fields are actively bringing other women into visible authorship roles. This aligns with findings from other studies (e.g., [Macaluso et al. 2016](https://doi.org/10.1097/ACM.0000000000001261)) showing that female corresponding/last authors tend to have more equitable co-authorship practices across roles.
+
+---
+
 ## What's Changed and What Hasn't
 
 ### The Encouraging Trend
@@ -89,7 +160,7 @@ Before I go further, I need to be honest about the limitations of this analysis.
 
 **Second:** Name-based gender databases work better for Western names than for East Asian, South Asian, Arabic, or African names. This likely means we're *undercounting* female authors from those regions, introducing a systematic bias. This is a known and documented problem in name-based gender studies, and it's worth acknowledging.
 
-**Third:** Using our two-tier approach (gender-guesser + Groq LLM), we achieved 98.4% classification coverage of previously unresolved author names. The remaining 1.6% of unclassifiable names are primarily those with non-Latin scripts (Cyrillic, Greek, diacriticals from Eastern European and Mediterranean regions) or genuinely ambiguous names used across genders. To validate that this doesn't bias results, we excluded inherently ambiguous initial-first names (6.4% of dataset) and found that the position gap (45% female first authors vs 31% female last authors) persists, confirming that our main findings are robust to classification limitations.
+**Third:** To handle the ~393,000 author names that could not be classified using traditional gender databases, we developed an advanced LLM-based classification pipeline. Using the Groq API (llama-3.1-8b-instant model), we classified 386,219 out of 392,610 unknown names with a 98.4% success rate using a three-stage approach with progressive refinement. The pipeline employed a sophisticated 4-level JSON parsing strategy to handle diverse API response formats and special characters. The remaining 6,391 ambiguous cases (1.6%) were excluded as genuinely uncertain—either ambiguous names used across genders, complex cultural/linguistic patterns, or encoding issues. To ensure this exclusion doesn't bias results, we also analyzed inherently ambiguous names in our dataset (62,417 authors, 6.4%) including simple initials (e.g., "A Smith"), hyphenated initials (e.g., "A-C Smith"), and punctuated initials (e.g., "A. Smith")—all patterns that lack sufficient contextual information for reliable gender inference. These patterns represent only 6.4% of authors with minimal impact on gender distributions (<1.3 percentage point changes). Using a high-quality filtered dataset of 915,314 authors (excluding these inherently ambiguous names), our main findings remain robust: the position gap (45% female first authors vs 31% female last authors) persists, confirming that our conclusions are not artifacts of classification limitations.
 
 **Fourth:** What we're measuring is *authorship*, not the workforce. Publication rates depend on funding, career stage distributions, research productivity norms, and many other factors beyond gender representation. These numbers describe who publishes, not necessarily who works in the field.
 
@@ -118,6 +189,23 @@ This analysis is open-source and reproducible. If you want to explore the data y
 And if you haven't already, **fill out the BWIB community survey**. The quantitative data I've presented here describes the published literature, but it doesn't capture the lived experiences of women in our field (the barriers you face, the support you need, the changes you want to see). That's what the survey is designed to capture, and it's equally important.
 
 Progress isn't inevitable. It's the result of people who care enough to ask questions, to measure what matters, and to act on what they find. That's what we're doing together.
+
+---
+
+## How We Did This
+
+We analyzed **274,702 PubMed publications** (2015–2025) from both Biology (`"Biology"[Mesh]`) and Computational Biology (`"Computational Biology"[Majr]`) datasets. We identified **977,731 unique authors** and inferred gender using a hybrid two-tier approach:
+
+1. **Offline gender database** (gender-guesser, ~45k names)
+2. **LLM-based classification** (Groq llama-3.1-8b-instant) for remaining unknowns using batch processing with advanced JSON parsing strategies
+
+For the LLM phase, we processed 392,610 unknown names through a three-stage pipeline: free API tier testing (5.6% coverage), paid tier scaling (93.4% coverage), and improved parsing recovery (93.8% coverage). The approach employed robust error handling with 4-level fallback strategies (direct JSON parsing → markdown code block extraction → auto-fix formatting → regex-based extraction) to achieve 98.4% overall classification coverage. The total cost was **$0.54** (3.4M input tokens + 4.6M output tokens), or approximately **$0.0000014 per classified name**.
+
+For data quality, we excluded **ambiguous initial names** (6.4% of dataset: including simple initials like "A Smith", hyphenated initials like "A-C Smith", and punctuated initials like "A. Smith") as these patterns are inherently ambiguous for gender inference. The resulting filtered dataset of **915,314 authors** retained high statistical power while improving classification reliability.
+
+Author positions were classified following Bonham & Stefan (2017): first, second, other (middle), penultimate, and last. Female representation (P_female) was estimated using **bootstrap resampling** (1,000 iterations per group), with 95% confidence intervals reported as the 2.5th and 97.5th percentiles. The "female PI effect" was tested by stratifying by last author gender and comparing female representation across positions.
+
+For full technical details, validation studies, and reproducible code, see the [comprehensive methodology documentation on GitHub](https://github.com/lfaller/gender-gap-compbio).
 
 ---
 

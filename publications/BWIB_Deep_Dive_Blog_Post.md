@@ -30,6 +30,77 @@ We wanted to know: have the last 10 years changed that trajectory?
 
 ---
 
+## Reproducing Bonham & Stefan with 2015–2025 Data
+
+To assess progress, I replicated the Bonham & Stefan analysis exactly, using their same methodology and figures, but applied to contemporary data spanning 2015–2025. Here are the results:
+
+### Figure 1A: Female Representation by Author Position
+
+![Fig1A: P(female) by author position](./Fig1A_position_breakdown.png)
+
+This figure directly replicates Bonham & Stefan's Fig 1A, comparing the probability that an author in a given position is female across Biology and Computational Biology. Our 2015–2025 data shows:
+
+**Table 1. Proportion of Female Authors (2015–2025)**
+
+| Dataset | Position | Mean | 95% CI Lower | 95% CI Upper |
+|---------|----------|------|-------------|-------------|
+| Biology | first | 0.470 | 0.468 | 0.473 |
+| Biology | second | 0.448 | 0.445 | 0.451 |
+| Biology | other | 0.420 | 0.419 | 0.422 |
+| Biology | penultimate | 0.319 | 0.316 | 0.322 |
+| Biology | last | 0.321 | 0.319 | 0.324 |
+| **Computational Biology** | **first** | **0.406** | **0.400** | **0.411** |
+| **Computational Biology** | **second** | **0.403** | **0.398** | **0.408** |
+| **Computational Biology** | **other** | **0.391** | **0.389** | **0.394** |
+| **Computational Biology** | **penultimate** | **0.274** | **0.269** | **0.278** |
+| **Computational Biology** | **last** | **0.272** | **0.268** | **0.276** |
+
+**Key observation:** Computational biology papers still show lower female representation than biology papers across all author positions. The gap has narrowed somewhat (from 4–6 percentage points in 2017 to 3–5 percentage points in 2025), but it persists.
+
+### Figure 1B: Temporal Trend in Female Authorship
+
+![Fig1B: P(female) over time](./Fig1B_temporal_trend.png)
+
+This replicates Bonham & Stefan's Fig 1B, showing how female representation has changed year-by-year. The improvement is evident: both biology and computational biology show upward trends from 2015 to 2025.
+
+### Figure 1C: The Female PI Effect
+
+![Fig1C: P(female) by PI gender](./Fig1C_pi_effect.png)
+
+This is one of the most striking findings from Bonham & Stefan: papers with a female last author (presumed principal investigator) have significantly more female co-authors at every position. We found this effect still holds in 2015–2025 data:
+
+**Table 2. Proportion of Female Authors by PI Gender (2015–2025)**
+
+| Dataset | Position | PI Gender | Mean | 95% CI Lower | 95% CI Upper |
+|---------|----------|-----------|------|-------------|-------------|
+| **Biology** |
+| first | Male | 0.445 | 0.440 | 0.449 |
+| first | Female | **0.575** | 0.569 | 0.582 |
+| second | Male | 0.425 | 0.421 | 0.429 |
+| second | Female | **0.527** | 0.521 | 0.533 |
+| other | Male | 0.405 | 0.403 | 0.407 |
+| other | Female | **0.484** | 0.481 | 0.487 |
+| penultimate | Male | 0.296 | 0.292 | 0.301 |
+| penultimate | Female | **0.385** | 0.379 | 0.391 |
+| **Computational Biology** |
+| first | Male | 0.378 | 0.372 | 0.384 |
+| first | Female | **0.516** | 0.505 | 0.528 |
+| second | Male | 0.383 | 0.377 | 0.390 |
+| second | Female | **0.484** | 0.472 | 0.495 |
+| other | Male | 0.379 | 0.376 | 0.382 |
+| other | Female | **0.451** | 0.446 | 0.456 |
+| penultimate | Male | 0.257 | 0.251 | 0.263 |
+| penultimate | Female | **0.332** | 0.320 | 0.344 |
+
+**The Female PI Effect: Quantified**
+
+- In **biology** papers with a male last author, first author is 44.5% female; with a female last author, it jumps to **57.5%** (a **13 percentage point increase**)
+- In **computational biology** papers with a male last author, first author is 37.8% female; with a female last author, it jumps to **51.6%** (a **13.8 percentage point increase**)
+
+This is remarkable and hopeful: women in senior positions in both fields are actively bringing other women into visible authorship roles. This aligns with findings from other studies (e.g., [Macaluso et al. 2016](https://doi.org/10.1097/ACM.0000000000001261)) showing that female corresponding/last authors tend to have more equitable co-authorship practices across roles.
+
+---
+
 ## What's Changed and What Hasn't
 
 ### The Encouraging Trend
