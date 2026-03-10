@@ -21,6 +21,8 @@ Read the full analysis with methodology, temporal trends, and what this means fo
 
 Analyzed 274,702 papers & 977,731 unique authors using hybrid gender classification (databases + LLM) | Full code on GitHub
 
+**Acknowledgments:** This work was shaped by conversations with BWIB's Advocacy Committee, and special thanks to Dr. Samantha Klasfeld and Amulya Shastry for their enthusiasm and early input.
+
 ---
 
 #WomenInScience #ComputationalBiology #GenderEquity #STEM #DataDriven #LLM #OpenScience

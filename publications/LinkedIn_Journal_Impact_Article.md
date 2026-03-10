@@ -34,4 +34,6 @@ Full analysis with temporal trends and what this means for the field: [LINK TO B
 
 *1.76M author-position records analyzed | Hybrid classification (databases + LLM) | Methodology on GitHub*
 
+**Acknowledgments:** This analysis was inspired by a question from Dr. Samantha Klasfeld, whose curiosity about journal prestige revealed one of the most counterintuitive findings in the dataset. Thanks also to Amulya Shastry for her inspiring discussions.
+
 #WomenInScience #ComputationalBiology #GenderEquity #STEM #LLM #OpenScience
