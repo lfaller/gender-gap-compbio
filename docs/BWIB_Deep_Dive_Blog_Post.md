@@ -1,7 +1,7 @@
 # Where Do We Stand? Updating a Landmark Study on Gender in Computational Biology
 
 **By Lina Faller, Ph.D., VP Boston Women in Bioinformatics**
-*February 2026*
+*March 2026*
 
 ---
 
