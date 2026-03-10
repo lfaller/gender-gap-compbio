@@ -38,7 +38,7 @@ To assess progress, I replicated the Bonham & Stefan analysis exactly, using the
 
 ![Fig1A: P(female) by author position](./Fig1A_position_breakdown.png)
 
-This figure directly replicates Bonham & Stefan's Fig 1A, comparing the probability that an author in a given position is female across Biology and Computational Biology. Our 2015–2025 data shows:
+This figure directly replicates Bonham & Stefan's Fig 1A, showing the **probability** that an author in each position is female across Biology and Computational Biology. This represents the unweighted P(female) for each position separately. Our 2015–2025 data shows:
 
 **Table 1. Proportion of Female Authors (2015–2025)**
 
@@ -118,7 +118,7 @@ Here's the year-by-year breakdown:
 - 2023: 41.1%
 - 2025: 42.3%
 
-This is meaningful progress. But let me be precise about what it represents: this is P(female), the proportion of female authors at each position weighted by position type (first author, last author, middle positions). It's the right metric for understanding representation, but it's also important to note the *range* across positions.
+This is meaningful progress. But let me be precise about what it represents: the 37.3%–42.3% trend is a **weighted probability** (P_female) combining all positions together, weighted by their frequency. Figure 1A shows the **unweighted** probabilities for each individual position. We'll examine both throughout this analysis, since they tell complementary stories about representation.
 
 ### The Persistence of Position Gaps
 
