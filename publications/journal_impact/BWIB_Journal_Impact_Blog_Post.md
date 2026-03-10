@@ -1,7 +1,7 @@
 # Beyond Authorship Position: What We Found About Women and Journal Prestige
 
 **By Lina Faller, Ph.D., VP Boston Women in Bioinformatics**
-*February 2026*
+*March 2026*
 
 ---
 
