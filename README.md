@@ -30,7 +30,7 @@ Each figure can be regenerated independently or all together. See [Deep Dive Fig
 
 Follow-up analysis investigating whether female authors publish in lower-impact journals. Currently in proof-read phase.
 
-**Results:** [Surprising finding](publications/BWIB_Journal_Impact_Blog_Post.md) — No evidence of a journal impact gap. Female representation is consistent across all journal quartiles (Q1-Q4).
+**Results:** [Surprising finding](publications/journal_impact/BWIB_Journal_Impact_Blog_Post.md) — No evidence of a journal impact gap. Female representation is consistent across all journal quartiles (Q1-Q4).
 
 ## Data Availability
 
@@ -99,25 +99,22 @@ For faster reproduction without API calls, download the data from Zenodo and ext
 │   └── plotting.py              # Figure generation
 │
 ├── publications/
-│   ├── BWIB_Deep_Dive_Blog_Post.md              # Main published blog post (2015-2025 update)
-│   ├── BWIB_Journal_Impact_Blog_Post.md         # Follow-up analysis (draft)
-│   └── bwib_deep_dive/                          # Deep Dive blog post self-contained directory
-│       ├── BWIB_Deep_Dive_Blog_Post.md
-│       ├── Fig1A_position_breakdown.png
-│       ├── Fig1B_temporal_trend.png
-│       ├── Fig1C_pi_effect.png
-│       └── figures/                             # Modular, independently-runnable figure scripts
-│           ├── README.md                        # Full documentation for figure reproduction
-│           ├── __init__.py
-│           ├── utils.py                         # Shared utilities (data loading, etc.)
-│           ├── figure_1a_position_breakdown.py  # Generate Fig 1A
-│           ├── figure_1b_temporal_trend.py      # Generate Fig 1B
-│           ├── figure_1c_pi_effect.py           # Generate Fig 1C
-│           ├── table_1_female_proportion.py     # Generate Table 1
-│           └── table_2_pi_effect_statistics.py  # Generate Table 2
+│   ├── bwib_deep_dive/                      # Deep Dive blog post (self-contained)
+│   │   ├── BWIB_Deep_Dive_Blog_Post.md
+│   │   ├── Fig1A_position_breakdown.png
+│   │   ├── Fig1B_temporal_trend.png
+│   │   ├── Fig1C_pi_effect.png
+│   │   └── figures/                         # Modular, reproducible scripts
+│   │
+│   ├── journal_impact/                      # Journal Impact analysis (self-contained)
+│   │   ├── BWIB_Journal_Impact_Blog_Post.md
+│   │   ├── fig_journal_impact_by_position.png
+│   │   └── fig_journal_quartile_distribution.png
+│   │
+│   └── LinkedIn_*.md                        # LinkedIn articles
 │
 └── outputs/
-    └── figures/                 # Publication-ready figures (analysis pipeline outputs)
+    └── figures/                 # Publication-ready figures (pipeline outputs)
 ```
 
 ## Quick Start
