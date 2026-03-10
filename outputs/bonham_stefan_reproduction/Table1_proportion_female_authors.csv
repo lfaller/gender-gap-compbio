@@ -1,0 +1,11 @@
+Dataset,Position,Mean,95% CI Lower,95% CI Upper,N
+Biology,first,0.47,0.468,0.473,108888
+Biology,second,0.448,0.445,0.451,99418
+Biology,other,0.42,0.419,0.422,454499
+Biology,penultimate,0.319,0.316,0.322,93760
+Biology,last,0.321,0.319,0.324,112918
+Computational Biology,first,0.406,0.4,0.411,35913
+Computational Biology,second,0.403,0.398,0.408,32365
+Computational Biology,other,0.391,0.389,0.394,150227
+Computational Biology,penultimate,0.274,0.269,0.278,29868
+Computational Biology,last,0.272,0.268,0.276,37671

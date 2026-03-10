@@ -1,0 +1,17 @@
+Dataset,Position,PI Gender,Mean,95% CI Lower,95% CI Upper,N
+Biology,first,Male,0.445,0.44,0.449,56715
+Biology,first,Female,0.575,0.569,0.582,26881
+Biology,second,Male,0.425,0.421,0.429,53423
+Biology,second,Female,0.527,0.521,0.533,25364
+Biology,other,Male,0.405,0.403,0.407,251643
+Biology,other,Female,0.484,0.481,0.487,111725
+Biology,penultimate,Male,0.296,0.292,0.301,49655
+Biology,penultimate,Female,0.385,0.379,0.391,23670
+Computational Biology,first,Male,0.378,0.372,0.384,20228
+Computational Biology,first,Female,0.516,0.505,0.528,7494
+Computational Biology,second,Male,0.383,0.377,0.39,18753
+Computational Biology,second,Female,0.484,0.472,0.495,7006
+Computational Biology,other,Male,0.379,0.376,0.382,87967
+Computational Biology,other,Female,0.451,0.446,0.456,33145
+Computational Biology,penultimate,Male,0.257,0.251,0.263,16970
+Computational Biology,penultimate,Female,0.332,0.32,0.344,6474
