@@ -5,11 +5,11 @@
 
 ---
 
-## The Question We Asked
+## The Question I Asked
 
-Right now, BWIB is collecting community data through our landscape survey (asking women in bioinformatics directly about their experiences, barriers, and aspirations). But while we listen to our community, we also wanted to know: what does the *published* literature actually tell us about where we've been?
+Right now, BWIB is collecting community data through our landscape survey (asking women in bioinformatics directly about their experiences, barriers, and aspirations). But while listening to our community, I also wanted to know: what does the *published* literature actually tell us about where we've been?
 
-Eight years ago, two researchers named [Bonham and Stefan published a landmark paper](https://doi.org/10.1371/journal.pcbi.1005134) in *PLoS Computational Biology* that answered a simple question: Are women underrepresented in computational biology authorship? Their answer was yes. But it's 2026 now. Does their finding still hold? What has changed, and what hasn't?
+Eight years ago, two researchers named [Bonham and Stefan published a landmark paper](https://doi.org/10.1371/journal.pcbi.1005134) in *PLoS Computational Biology* that answered a simple question: Are women underrepresented in computational biology authorship? Their answer was yes. But the current year is 2026. Does their finding still hold? What has changed, and what hasn't?
 
 I decided to replicate their 2017 analysis with a decade of new data through 2025, and the results are both encouraging and sobering.
 
@@ -26,7 +26,7 @@ I decided to replicate their 2017 analysis with a decade of new data through 202
 
 The implications were clear: computational biology had a gender representation problem, and at the rate of progress, closing the gap would take decades.
 
-We wanted to know: have the last 10 years changed that trajectory?
+I wanted to know: have the last 10 years changed that trajectory?
 
 ---
 
@@ -97,7 +97,7 @@ This is one of the most striking findings from Bonham & Stefan: papers with a fe
 - In **biology** papers with a male last author, first author is 44.5% female; with a female last author, it jumps to **57.5%** (a **13 percentage point increase**)
 - In **computational biology** papers with a male last author, first author is 37.8% female; with a female last author, it jumps to **51.6%** (a **13.8 percentage point increase**)
 
-This is remarkable and hopeful: women in senior positions in both fields are actively bringing other women into visible authorship roles. This "female PI effect" (the pattern we documented in our analysis) suggests that women in leadership positions actively support and elevate other women in visible authorship roles.
+This is remarkable and hopeful: women in senior positions in both fields are actively bringing other women into visible authorship roles. This "female PI effect" (the pattern I documented in my analysis) suggests that women in leadership positions actively support and elevate other women in visible authorship roles.
 
 ---
 
@@ -148,7 +148,7 @@ Did the pandemic affect gender representation? The numbers suggest a modest disr
 - **During pandemic (2020–2021):** 39.9% female
 - **Recovery (2022–2025):** 41.3% female
 
-Rather than a dip, we see a *continuation* of the upward trend, even during lockdowns. This is remarkable. One interpretation: remote work and virtual conferences may have reduced some barriers that historically disadvantaged women. Another interpretation: the pandemic prompted many journals and institutions to examine their practices, including around equity and diversity.
+Rather than a dip, I see a *continuation* of the upward trend, even during lockdowns. This is remarkable. One interpretation: remote work and virtual conferences may have reduced some barriers that historically disadvantaged women. Another interpretation: the pandemic prompted many journals and institutions to examine their practices, including around equity and diversity.
 
 ---
 
@@ -158,11 +158,11 @@ Before I go further, I need to be honest about the limitations of this analysis.
 
 **First:** Gender inference from first names is a binary classification; it can assign male or female, but cannot represent non-binary or gender-nonconforming researchers. This analysis is invisible to them.
 
-**Second:** Name-based gender databases work better for Western names than for East Asian, South Asian, Arabic, or African names. This likely means we're *undercounting* female authors from those regions, introducing a systematic bias. This is a known and documented problem in name-based gender studies, and it's worth acknowledging.
+**Second:** Name-based gender databases work better for Western names than for East Asian, South Asian, Arabic, or African names. This likely means I'm *undercounting* female authors from those regions, introducing a systematic bias. This is a known and documented problem in name-based gender studies, and it's worth acknowledging.
 
 **Third:** To handle the ~393,000 author names that could not be classified using traditional gender databases, we developed an advanced LLM-based classification pipeline. Using the Groq API (llama-3.1-8b-instant model), we classified 386,219 out of 392,610 unknown names with a 98.4% success rate using a three-stage approach with progressive refinement. The pipeline employed a sophisticated 4-level JSON parsing strategy to handle diverse API response formats and special characters. The remaining 6,391 ambiguous cases (1.6%) were excluded as genuinely uncertain: either ambiguous names used across genders, complex cultural/linguistic patterns, or encoding issues. To ensure this exclusion doesn't bias results, we also analyzed inherently ambiguous names in our dataset (62,417 authors, 6.4%), including simple initials (e.g., "A Smith"), hyphenated initials (e.g., "A-C Smith"), and punctuated initials (e.g., "A. Smith"). All such patterns lack sufficient contextual information for reliable gender inference. These patterns represent only 6.4% of authors with minimal impact on gender distributions (<1.3 percentage point changes). Using a high-quality filtered dataset of 915,314 authors (excluding these inherently ambiguous names), our main findings remain robust: the position gap (45% female first authors vs 31% female last authors) persists, confirming that our conclusions are not artifacts of classification limitations.
 
-**Fourth:** What we're measuring is *authorship*, not the workforce. Publication rates depend on funding, career stage distributions, research productivity norms, and many other factors beyond gender representation. These numbers describe who publishes, not necessarily who works in the field.
+**Fourth:** What I'm measuring is *authorship*, not the workforce. Publication rates depend on funding, career stage distributions, research productivity norms, and many other factors beyond gender representation. These numbers describe who publishes, not necessarily who works in the field.
 
 That said, authorship in peer-reviewed literature is a meaningful signal; it's how scientific accomplishment is documented and credited. So these trends matter.
 
@@ -170,15 +170,15 @@ That said, authorship in peer-reviewed literature is a meaningful signal; it's h
 
 ## What This Means for BWIB
 
-The data tells us something important: progress is possible, and it's accelerating.
+The data tells me something important: progress is possible, and it's accelerating.
 
 When Bonham and Stefan published their work in 2017, it wasn't academic; it was a call to action. And the community responded. Funding agencies, journals, and institutions began paying attention to representation. Mentorship programs, like BWIB's own, expanded. Women's visibility in computational biology grew.
 
-The acceleration we're seeing (from 0.5 percentage points/year to 0.5 percentage points/year *or more*) suggests that intentional work on diversity and inclusion *works*.
+The acceleration I'm seeing (from 0.5 percentage points/year to 0.5 percentage points/year *or more*) suggests that intentional work on diversity and inclusion *works*.
 
-At the same time, the 14-point gap between first and last author representation reminds us that there's still work to do, particularly around building pathways to senior leadership for women in computational biology. This is exactly where BWIB's mentorship program, leadership development initiatives, and visibility campaigns add value.
+At the same time, the 14-point gap between first and last author representation reminds me that there's still work to do, particularly around building pathways to senior leadership for women in computational biology. This is exactly where BWIB's mentorship program, leadership development initiatives, and visibility campaigns add value.
 
-The female PI effect tells us something encouraging: women in power in this field are bringing other women along. That's not a given in many STEM disciplines. It's something to celebrate and strengthen.
+The female PI effect tells me something encouraging: women in power in this field are bringing other women along. That's not a given in many STEM disciplines. It's something to celebrate and strengthen.
 
 ---
 
@@ -198,16 +198,16 @@ This work grew out of conversations with BWIB's Advocacy Committee, and I'm grat
 
 ---
 
-## How We Did This
+## How I Did This
 
-We analyzed **274,702 PubMed publications** (2015–2025) from both Biology (`"Biology"[Mesh]`) and Computational Biology (`"Computational Biology"[Majr]`) datasets. (Note: Unlike Bonham & Stefan, who analyzed both PubMed and arXiv, we focused on PubMed due to API limitations.) We identified **977,731 unique authors** and inferred gender using a hybrid two-tier approach:
+I analyzed **274,702 PubMed publications** (2015–2025) from both Biology (`"Biology"[Mesh]`) and Computational Biology (`"Computational Biology"[Majr]`) datasets. (Note: Unlike Bonham & Stefan, who analyzed both PubMed and arXiv, I focused on PubMed due to API limitations.) I identified **977,731 unique authors** and inferred gender using a hybrid two-tier approach:
 
 1. **Offline gender database** (gender-guesser, ~45k names)
 2. **LLM-based classification** (Groq llama-3.1-8b-instant) for remaining unknowns using batch processing with advanced JSON parsing strategies
 
 For the LLM phase, we processed 392,610 unknown names through a three-stage pipeline: free API tier testing (5.6% coverage), paid tier scaling (93.4% coverage), and improved parsing recovery (93.8% coverage). The approach employed robust error handling with 4-level fallback strategies (direct JSON parsing → markdown code block extraction → auto-fix formatting → regex-based extraction) to achieve 98.4% overall classification coverage. The total cost was **$0.54** (3.4M input tokens + 4.6M output tokens), or approximately **$0.0000014 per classified name**.
 
-For data quality, we excluded **ambiguous initial names** (6.4% of dataset: including simple initials like "A Smith", hyphenated initials like "A-C Smith", and punctuated initials like "A. Smith") as these patterns are inherently ambiguous for gender inference. The resulting filtered dataset of **915,314 authors** retained high statistical power while improving classification reliability.
+For data quality, I excluded **ambiguous initial names** (6.4% of dataset: including simple initials like "A Smith", hyphenated initials like "A-C Smith", and punctuated initials like "A. Smith") as these patterns are inherently ambiguous for gender inference. The resulting filtered dataset of **915,314 authors** retained high statistical power while improving classification reliability.
 
 Author positions were classified following Bonham & Stefan (2017): first, second, other (middle), penultimate, and last. Female representation (P_female) was estimated using **bootstrap resampling** (1,000 iterations per group), with 95% confidence intervals reported as the 2.5th and 97.5th percentiles. The "female PI effect" was tested by stratifying by last author gender and comparing female representation across positions.
 
@@ -215,7 +215,7 @@ For full technical details, validation studies, and reproducible code, see the [
 
 ---
 
-**Questions? Thoughts?** Share them on the BWIB forum or reach out to me directly. And help us spread the word; share this analysis with colleagues, students, and fellow women in computational biology.
+**Questions? Thoughts?** Share them on the BWIB forum or reach out to me directly. And please share this analysis with colleagues, students, and fellow women in computational biology.
 
 Together, we're shifting the landscape.
 
