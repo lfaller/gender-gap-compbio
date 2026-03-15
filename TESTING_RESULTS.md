@@ -299,6 +299,136 @@ Three bugs were discovered during testing that were not in the original audit. A
 
 ---
 
+---
+
+### Stage 9 — Docker Workflow
+
+**Result: NOT EXECUTABLE — `docker` is not installed on this Windows system. Static audit performed instead.**
+
+The Docker files (`Dockerfile`, `docker-compose.yml`, `.dockerignore`) were audited statically. **Two critical bugs were found that would have caused the Docker build and container to fail.**
+
+#### Bug 1: `docker-compose.yml` — `ENTREZ_EMAIL` still used (Fix 12)
+
+`docker-compose.yml` line 14 still referenced `ENTREZ_EMAIL`, which was missed when Fix 3 updated the Makefile and README:
+
+```yaml
+# Before (broken — cli.py reads NCBI_EMAIL, not ENTREZ_EMAIL)
+ENTREZ_EMAIL: ${ENTREZ_EMAIL:-your.email@example.com}
+
+# After (fixed)
+NCBI_EMAIL: ${NCBI_EMAIL:-your.email@example.com}
+```
+
+Any `docker compose up` run followed by `cli.py fetch` would have failed with `ClickException: NCBI_EMAIL not set in .env file` even if the user had set `ENTREZ_EMAIL` in their shell environment.
+
+#### Bug 2: `Dockerfile` — Python 3.9 incompatible with scipy 1.13 (Fix 13)
+
+The Dockerfile used `python:3.9-slim` as both the build and runtime base. However, `scipy~=1.13.0` (pinned in Fix 11) requires Python ≥ 3.10:
+
+- scipy 1.12 (Jan 2024): last release to support Python 3.9
+- scipy 1.13 (Apr 2024): minimum Python 3.10
+
+A `docker build` would fail during `pip install -r requirements.txt`. Building from sdist would also fail because the Dockerfile installs only `build-essential` (no `gfortran`), which scipy's Fortran extensions require.
+
+Additionally, Python 3.9 reached end-of-life in October 2025 and receives no further security patches.
+
+**Fix applied:** Updated both `FROM` lines and the multi-stage `COPY` path from `python:3.9` to `python:3.11`:
+
+```dockerfile
+# Before
+FROM python:3.9-slim AS base
+FROM python:3.9-slim
+COPY --from=base /usr/local/lib/python3.9/site-packages ...
+
+# After
+FROM python:3.11-slim AS base
+FROM python:3.11-slim
+COPY --from=base /usr/local/lib/python3.11/site-packages ...
+```
+
+#### Static audit of remaining Docker components
+
+| Component | Finding |
+|---|---|
+| `.dockerignore` | Correct — excludes `.env`, `data/*.db`, large CSVs, `venv/`; secrets are not baked into the image |
+| `Makefile` docker targets | Correct — `docker-run` and `docker-shell` already pass `NCBI_EMAIL` (fixed in Fix 3) |
+| `HEALTHCHECK` | Functional — imports `cli` module; heavyweight but correct |
+| Default `CMD ["analyze"]` | Expected to fail without a database (by design; users must run `download-zenodo` or `infer` first) |
+
+---
+
+## Additional Bugs Found During Docker Audit
+
+Two bugs were discovered during the Docker audit. Both were fixed immediately and are documented as Fixes 12–13 in [REPRODUCIBILITY_FIXES.md](./REPRODUCIBILITY_FIXES.md).
+
+### Fix 12 — `ENTREZ_EMAIL` in `docker-compose.yml`
+
+| Field | Detail |
+|---|---|
+| **File** | `docker-compose.yml` line 14 |
+| **Severity** | 🔴 Critical |
+| **Symptom** | `docker compose up` + `cli.py fetch` fails with `NCBI_EMAIL not set in .env file` |
+| **Root cause** | Fix 3 updated Makefile and README but missed `docker-compose.yml` |
+| **Fix** | `ENTREZ_EMAIL: ${ENTREZ_EMAIL:-...}` → `NCBI_EMAIL: ${NCBI_EMAIL:-...}` |
+
+### Fix 13 — `python:3.9-slim` incompatible with `scipy~=1.13.0`
+
+| Field | Detail |
+|---|---|
+| **File** | `Dockerfile` lines 3, 19, 24 |
+| **Severity** | 🔴 Critical |
+| **Symptom** | `docker build` fails — no scipy 1.13 wheel for Python 3.9; sdist build also fails (no gfortran) |
+| **Root cause** | scipy 1.13 (Apr 2024) requires Python ≥ 3.10; Python 3.9 also EOL since Oct 2025 |
+| **Fix** | Changed both `FROM python:3.9-slim` to `FROM python:3.11-slim`; updated site-packages path |
+
+---
+
+## Additional Bugs Found During Full Reproduction Path Audit
+
+Four bugs were discovered while auditing all documented reproduction paths (bash downloader, DOCKER.md, journal impact script, README). All were fixed immediately and are documented as Fixes 14–17 in [REPRODUCIBILITY_FIXES.md](./REPRODUCIBILITY_FIXES.md).
+
+### Fix 14 — Bash Zenodo downloader missing `/content` suffix
+
+| Field | Detail |
+|---|---|
+| **File** | `scripts/download_zenodo_data.sh` line 33 |
+| **Severity** | 🔴 Critical |
+| **Symptom** | `bash scripts/download_zenodo_data.sh` downloads JSON metadata instead of binary files |
+| **Root cause** | Same bug as Fix 6; the Python script was patched but the bash version was not updated |
+| **Fix** | `FILE_URL="${ZENODO_URL}/${FILE}"` → `FILE_URL="${ZENODO_URL}/${FILE}/content"` |
+
+### Fix 15 — `DOCKER.md` used `ENTREZ_EMAIL` throughout
+
+| Field | Detail |
+|---|---|
+| **File** | `DOCKER.md` (12 occurrences) |
+| **Severity** | 🔴 Critical |
+| **Symptom** | Any user following `DOCKER.md` sets `ENTREZ_EMAIL`; container ignores it and fails on `fetch` |
+| **Root cause** | Fix 3 and Fix 12 updated Makefile, README, and `docker-compose.yml` but not `DOCKER.md` |
+| **Fix** | Replaced all 12 `ENTREZ_EMAIL` occurrences with `NCBI_EMAIL` |
+
+### Fix 16 — `DOCKER.md` wrong command for preprocess step
+
+| Field | Detail |
+|---|---|
+| **File** | `DOCKER.md` line 168 |
+| **Severity** | 🟡 Minor |
+| **Symptom** | `docker run gender-gap-compbio run_gender_inference_db.py` runs `python cli.py run_gender_inference_db.py` — not a valid CLI subcommand |
+| **Root cause** | Wrong script name and incompatible with `python cli.py` ENTRYPOINT |
+| **Fix** | `docker run --entrypoint python ... scripts/preprocess_journal_quartiles.py` |
+
+### Fix 17 — Stale script paths in `analyze_journal_impact.py` and `README.md`
+
+| Field | Detail |
+|---|---|
+| **Files** | `scripts/analyze_journal_impact.py` (lines 86, 265), `README.md` (line 280) |
+| **Severity** | 🟡 Minor |
+| **Symptom** | Error messages and README workflow step suggest bare filenames that don't exist at repo root |
+| **Root cause** | Scripts moved to `scripts/` in v0.3.0; error messages and docs not updated |
+| **Fix** | Updated to `python scripts/preprocess_journal_quartiles.py`, `python cli.py infer` |
+
+---
+
 ## Summary
 
 | Stage | Result | Notes |
@@ -311,7 +441,9 @@ Three bugs were discovered during testing that were not in the original audit. A
 | Zenodo URL | PASS | `/content` suffix confirmed to return binary data |
 | Makefile | NOT TESTABLE | `make` not installed on Windows |
 | API-dependent steps | SKIPPED | Require API keys / large downloads |
+| Docker build/run | NOT EXECUTABLE | `docker` not installed; static audit found 2 critical bugs (fixed) |
+| Full path audit (bash downloader, DOCKER.md, journal scripts, README) | STATIC AUDIT | 4 additional bugs found and fixed |
 
-**3 additional bugs found and fixed during testing** (Fixes 8–10 in `REPRODUCIBILITY_FIXES.md`), bringing the total to **11 fixes**.
+**9 additional bugs found and fixed during testing, Docker audit, and full path audit** (Fixes 9–17 in `REPRODUCIBILITY_FIXES.md`), bringing the total to **17 fixes**.
 
-The workflow is reproducible on the path that can be tested without API keys. The fast reproduction path (Zenodo download → analyze → figures) is expected to work end-to-end given that: (a) the download URL is now correct, (b) all CLI commands import and exit with correct codes, and (c) all module imports succeed with the pinned package versions.
+The workflow is reproducible on the path that can be tested without API keys. The fast reproduction path (Zenodo download → analyze → figures) is expected to work end-to-end given that: (a) the download URL is correct in both the Python and bash downloaders, (b) all CLI commands import and exit with correct codes, (c) all module imports succeed with the pinned package versions, and (d) Docker builds are expected to succeed after the Python 3.11 and `NCBI_EMAIL` fixes.

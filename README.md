@@ -277,7 +277,7 @@ python cli.py analyze --help
 
 **Workflow with CLI:**
 1. `python cli.py fetch --start-year 2015 --end-year 2025` (fetch PubMed data)
-2. `python scripts/run_gender_inference_db.py` (infer gender for unique authors)
+2. `python cli.py infer` (infer gender for unique authors)
 3. `python cli.py analyze` (run statistical analysis)
 4. `python cli.py figures` (generate publication-ready figures)
 

@@ -30,7 +30,7 @@ echo ""
 # Download each file
 echo "Downloading files..."
 for FILE in $FILES; do
-  FILE_URL="${ZENODO_URL}/${FILE}"
+  FILE_URL="${ZENODO_URL}/${FILE}/content"
   echo "Downloading: $FILE"
 
   # Determine destination

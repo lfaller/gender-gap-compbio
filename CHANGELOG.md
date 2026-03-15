@@ -8,15 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
-- **Reproducibility audit: 11 bugs fixed** (see [REPRODUCIBILITY_FIXES.md](./REPRODUCIBILITY_FIXES.md) for full details)
+- **Reproducibility audit: 17 bugs fixed** (see [REPRODUCIBILITY_FIXES.md](./REPRODUCIBILITY_FIXES.md) for full details)
   - **Makefile — wrong script paths (Critical):** `make infer`, `make classify`, and `make preprocess-journals` all invoked scripts without the `scripts/` path prefix, causing immediate "file not found" errors. `make classify` also referenced a non-existent filename (`classify_names.py` instead of `classify_names_retry.py`).
-  - **Environment variable mismatch (Critical):** `make setup` wrote `ENTREZ_EMAIL` to `.env` but `cli.py` reads `NCBI_EMAIL`. Any user following `make setup` would have a broken `make fetch`. Standardised on `NCBI_EMAIL` throughout `Makefile`, `README.md`, and `.env.example`.
+  - **Environment variable mismatch (Critical):** `make setup` wrote `ENTREZ_EMAIL` to `.env` but `cli.py` reads `NCBI_EMAIL`. Any user following `make setup` would have a broken `make fetch`. Standardised on `NCBI_EMAIL` throughout `Makefile`, `README.md`, `.env.example`, `docker-compose.yml`, and `DOCKER.md`.
   - **`cli.py infer` was a non-functional stub (Critical):** The command only printed instructions instead of running inference. Fixed to invoke `scripts/run_gender_inference_db.py` via `subprocess`.
   - **`cli.py run` exited early (Critical):** Hard `sys.exit(0)` after Step 2 made Steps 3 (analyze) and 4 (figures) unreachable dead code. Removed early exit; full pipeline now runs to completion.
-  - **Zenodo download URL returned JSON instead of file data (Critical):** Missing `/content` suffix caused `curl` to download a JSON metadata blob instead of binary file content, breaking `gzip.open()` and `pd.read_csv()`.
+  - **Zenodo download URL returned JSON instead of file data (Critical):** Missing `/content` suffix in both `scripts/download_zenodo_data.py` and `scripts/download_zenodo_data.sh` caused downloads to return a JSON metadata blob instead of binary file content.
   - **`cli.py --help` crashed on Windows (Critical):** `→` (U+2192) in the `run` command docstring caused `UnicodeEncodeError` on Windows cp1252 terminals. Replaced with `->`.
-  - **`cli.py analyze` error message pointed to non-existent path (Minor):** Error suggestion said `python run_gender_inference_db.py` (root-level, does not exist). Updated to `python cli.py infer`.
-  - **`requirements.txt` unpinned versions (Minor):** Changed from `>=` to three-component `~=X.Y.0` (e.g. `pandas~=2.2.0`) which pins to the specified major.minor series and only allows patch updates. Two-component `~=X.Y` (intermediate fix) was found to pin major only, allowing `groq 0.9` to resolve to `0.37.1`.
+  - **Docker — `docker-compose.yml` used `ENTREZ_EMAIL` (Critical):** Updated to `NCBI_EMAIL`.
+  - **Docker — `python:3.9-slim` incompatible with `scipy~=1.13.0` (Critical):** scipy 1.13 requires Python ≥ 3.10; the Dockerfile used `python:3.9-slim` (also EOL since October 2025). `docker build` would fail with no matching wheel. Updated to `python:3.11-slim`.
+  - **`DOCKER.md` — `ENTREZ_EMAIL` throughout and wrong preprocess command (Critical/Minor):** All 12 `ENTREZ_EMAIL` references updated to `NCBI_EMAIL`. Step 7 of the complete workflow example had the wrong script name and used CMD override (incompatible with the `python cli.py` ENTRYPOINT) — fixed with `--entrypoint python scripts/preprocess_journal_quartiles.py`.
+  - **Stale script paths in error messages and README (Minor):** Four stale bare-script-name references (`python run_gender_inference_db.py`, `python preprocess_journal_quartiles.py`) replaced with the correct CLI commands or `scripts/`-prefixed paths across `cli.py`, `analyze_journal_impact.py`, and `README.md`.
+  - **`requirements.txt` unpinned versions (Minor):** Changed from `>=` to three-component `~=X.Y.0` (e.g. `pandas~=2.2.0`). Two-component `~=X.Y` (intermediate fix) was found to pin major only, allowing `groq 0.9` to resolve to `0.37.1`.
   - **`.env.example` missing `GROQ_API_KEY` (Minor):** Added the key required for Tier 2 LLM classification. Removed two stale unused keys (`ARXIV_DELAY_SECONDS`, `GENDERIZE_API_KEY`).
 
 ### Changed

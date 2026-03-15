@@ -83,7 +83,7 @@ def load_and_prepare_data(
     if len(journal_df) == 0:
         raise ValueError(
             "No journal quartiles found in database.\n"
-            "Please run: python preprocess_journal_quartiles.py"
+            "Please run: python scripts/preprocess_journal_quartiles.py"
         )
 
     # Create lookup dict from database
@@ -262,7 +262,7 @@ def main():
     except FileNotFoundError as e:
         print(f"\n✗ Error: {e}")
         print("Make sure you have run the gender inference pipeline first:")
-        print("  python run_gender_inference_db.py")
+        print("  python cli.py infer")
         sys.exit(1)
     except Exception as e:
         print(f"\n✗ Analysis failed: {e}")
