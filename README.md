@@ -140,7 +140,7 @@ Register for free API keys and add them to your environment:
 
 ```bash
 # NCBI API key (for PubMed data fetching)
-export ENTREZ_EMAIL="your_email@example.com"  # Required for NCBI API
+export NCBI_EMAIL="your_email@example.com"  # Required for NCBI API
 
 # Groq API key (for LLM-based gender classification of unknown names)
 # Required for full reproducibility; get key at https://console.groq.com/
@@ -175,7 +175,7 @@ docker run --rm \
 
 # Or use Make shortcuts
 make docker-build
-make docker-run ENTREZ_EMAIL=your.email@example.com
+make docker-run NCBI_EMAIL=your.email@example.com
 ```
 
 See [DOCKER.md](DOCKER.md) for full Docker documentation, including `docker-compose` usage and development workflows.
@@ -277,7 +277,7 @@ python cli.py analyze --help
 
 **Workflow with CLI:**
 1. `python cli.py fetch --start-year 2015 --end-year 2025` (fetch PubMed data)
-2. `python scripts/run_gender_inference_db.py` (infer gender for unique authors)
+2. `python cli.py infer` (infer gender for unique authors)
 3. `python cli.py analyze` (run statistical analysis)
 4. `python cli.py figures` (generate publication-ready figures)
 

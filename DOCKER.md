@@ -16,7 +16,7 @@ This document explains how to run the gender gap analysis using Docker, which pr
    ```bash
    cp .env.example .env
    # Edit .env and add your credentials:
-   # - ENTREZ_EMAIL (required)
+   # - NCBI_EMAIL (required)
    # - NCBI_API_KEY (optional, recommended)
    # - GROQ_API_KEY (optional, for full reproducibility)
    ```
@@ -45,10 +45,10 @@ This document explains how to run the gender gap analysis using Docker, which pr
 make docker-build
 
 # Run analysis in container
-make docker-run ENTREZ_EMAIL=your.email@example.com
+make docker-run NCBI_EMAIL=your.email@example.com
 
 # Interactive shell
-make docker-shell ENTREZ_EMAIL=your.email@example.com
+make docker-shell NCBI_EMAIL=your.email@example.com
 
 # Clean up image
 make docker-clean
@@ -62,21 +62,21 @@ docker build -t gender-gap-compbio .
 
 # Run analysis (require pre-built data)
 docker run --rm \
-  -e ENTREZ_EMAIL=your.email@example.com \
+  -e NCBI_EMAIL=your.email@example.com \
   -v $(pwd)/outputs:/app/outputs \
   -v $(pwd)/data:/app/data \
   gender-gap-compbio:latest analyze
 
 # Interactive shell
 docker run --rm -it \
-  -e ENTREZ_EMAIL=your.email@example.com \
+  -e NCBI_EMAIL=your.email@example.com \
   -v $(pwd)/outputs:/app/outputs \
   -v $(pwd)/data:/app/data \
   gender-gap-compbio:latest /bin/bash
 
 # Fetch data
 docker run --rm \
-  -e ENTREZ_EMAIL=your.email@example.com \
+  -e NCBI_EMAIL=your.email@example.com \
   -v $(pwd)/data:/app/data \
   gender-gap-compbio:latest fetch --start-year 2015 --end-year 2025
 
@@ -116,7 +116,7 @@ The `Dockerfile` uses a **multi-stage build** approach:
 
 | Variable | Required | Notes |
 |----------|----------|-------|
-| `ENTREZ_EMAIL` | ✅ Yes | Your email for NCBI politeness policy |
+| `NCBI_EMAIL` | ✅ Yes | Your email for NCBI politeness policy |
 | `NCBI_API_KEY` | ❌ No | Get from https://www.ncbi.nlm.nih.gov/account/ (recomm ended) |
 | `GROQ_API_KEY` | ❌ No | Get from https://console.groq.com/ (for unknown names, ~$0.54 cost) |
 | `PYTHONUNBUFFERED` | Default | Set to `1` for real-time logging |
@@ -142,14 +142,14 @@ cd gender-gap-compbio
 
 # 2. Set up environment
 cp .env.example .env
-# Edit .env with ENTREZ_EMAIL and optional keys
+# Edit .env with NCBI_EMAIL and optional keys
 
 # 3. Build Docker image
 docker build -t gender-gap-compbio .
 
 # 4. Fetch PubMed data (2-4 hours)
 docker run --rm \
-  -e ENTREZ_EMAIL=your.email@example.com \
+  -e NCBI_EMAIL=your.email@example.com \
   -v $(pwd)/data:/app/data \
   gender-gap-compbio fetch --start-year 2015 --end-year 2025
 
@@ -162,10 +162,10 @@ docker run --rm \
 # (See README.md for instructions)
 
 # 7. Preprocess journal quartiles (15 min)
-docker run --rm \
+docker run --rm --entrypoint python \
   -v $(pwd)/data:/app/data \
   -v $(pwd)/local:/app/local \
-  gender-gap-compbio run_gender_inference_db.py
+  gender-gap-compbio scripts/preprocess_journal_quartiles.py
 
 # 8. Run analysis (10 min)
 docker run --rm \
@@ -241,7 +241,7 @@ To update analysis with new PubMed data:
 ```bash
 # 1. Fetch new data
 docker run --rm \
-  -e ENTREZ_EMAIL=your.email@example.com \
+  -e NCBI_EMAIL=your.email@example.com \
   -v $(pwd)/data:/app/data \
   gender-gap-compbio fetch --start-year 2026 --end-year 2028 --append
 
@@ -273,7 +273,7 @@ services:
   gender-gap-analysis:
     # Override environment variables
     environment:
-      ENTREZ_EMAIL: your.email@example.com
+      NCBI_EMAIL: your.email@example.com
       NCBI_API_KEY: your_api_key_here
 
     # Override volume mounts

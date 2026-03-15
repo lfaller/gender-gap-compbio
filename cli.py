@@ -160,16 +160,16 @@ def fetch(start_year, end_year, append):
 @cli.command()
 def infer():
     """Run gender inference on PubMed data (populates SQLite database)."""
+    import subprocess
     print("=" * 70)
     print("GENDER INFERENCE WITH SQLITE DATABASE")
     print("=" * 70)
-    print("\nTo run gender inference, execute:")
-    print("  python run_gender_inference_db.py")
-    print("\nThis will:")
-    print("  1. Load paper data from CSV files")
-    print("  2. Identify unique authors")
-    print("  3. Infer gender for each author")
-    print("  4. Populate SQLite database at data/gender_data.db")
+    script_path = Path(__file__).parent / "scripts" / "run_gender_inference_db.py"
+    result = subprocess.run([sys.executable, str(script_path)])
+    if result.returncode != 0:
+        raise click.ClickException(
+            f"Gender inference script exited with code {result.returncode}"
+        )
 
 
 @cli.command()
@@ -184,7 +184,7 @@ def analyze():
     if not db_path.exists():
         raise click.ClickException(
             "Database not found at data/gender_data.db\n"
-            "Please run: python run_gender_inference_db.py"
+            "Please run: python cli.py infer"
         )
 
     db = GenderDatabase(db_path="data/gender_data.db")
@@ -360,7 +360,7 @@ def figures():
     help="End year for analysis (default: 2025)",
 )
 def run(start_year, end_year):
-    """Run the complete pipeline: fetch → infer → analyze → figures."""
+    """Run the complete pipeline: fetch -> infer -> analyze -> figures."""
     print("\n" + "=" * 70)
     print("GENDER GAP IN COMPUTATIONAL BIOLOGY: FULL PIPELINE")
     print("=" * 70)
@@ -375,11 +375,13 @@ def run(start_year, end_year):
 
     # Step 2: Infer
     print("\n[STEP 2/4] Gender inference...")
-    print("Next, run: python run_gender_inference_db.py")
-    print("Then return to run steps 3 and 4")
-    sys.exit(0)
+    try:
+        infer.callback()
+    except Exception as e:
+        click.echo(f"Error during inference: {e}", err=True)
+        sys.exit(1)
 
-    # Step 3: Analyze (after inference completes)
+    # Step 3: Analyze
     print("\n[STEP 3/4] Statistical analysis...")
     try:
         analyze.callback()

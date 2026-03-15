@@ -53,7 +53,7 @@ setup:
 	@echo "Creating .env file..."
 	@if [ ! -f .env ]; then \
 		echo "# NCBI Configuration" > .env; \
-		echo "ENTREZ_EMAIL=your.email@example.com" >> .env; \
+		echo "NCBI_EMAIL=your.email@example.com" >> .env; \
 		echo "" >> .env; \
 		echo "# Groq API (optional, for unknown name classification)" >> .env; \
 		echo "# Get key at: https://console.groq.com/" >> .env; \
@@ -94,15 +94,15 @@ fetch:
 
 infer:
 	@echo "Inferring gender for authors..."
-	$(PYTHON) run_gender_inference_db.py
+	$(PYTHON) scripts/run_gender_inference_db.py
 
 classify:
 	@echo "Classifying unknown names via Groq API..."
-	$(PYTHON) classify_names.py
+	$(PYTHON) scripts/classify_names_retry.py
 
 preprocess-journals:
 	@echo "Preprocessing journal quartiles..."
-	$(PYTHON) preprocess_journal_quartiles.py
+	$(PYTHON) scripts/preprocess_journal_quartiles.py
 
 analyze:
 	@echo "Running statistical analysis..."
@@ -133,14 +133,14 @@ docker-build:
 	@echo "✓ Built $(DOCKER_IMAGE):latest and $(DOCKER_IMAGE):$(shell date +%Y%m%d)"
 
 docker-run: docker-build
-	@if [ -z "$(ENTREZ_EMAIL)" ]; then \
-		echo "ERROR: ENTREZ_EMAIL environment variable not set"; \
-		echo "Usage: ENTREZ_EMAIL=your@email.com make docker-run"; \
+	@if [ -z "$(NCBI_EMAIL)" ]; then \
+		echo "ERROR: NCBI_EMAIL environment variable not set"; \
+		echo "Usage: NCBI_EMAIL=your@email.com make docker-run"; \
 		exit 1; \
 	fi
 	@echo "Running analysis in Docker container..."
 	docker run --rm \
-		-e ENTREZ_EMAIL=$(ENTREZ_EMAIL) \
+		-e NCBI_EMAIL=$(NCBI_EMAIL) \
 		$(if $(NCBI_API_KEY),-e NCBI_API_KEY=$(NCBI_API_KEY),) \
 		$(if $(GROQ_API_KEY),-e GROQ_API_KEY=$(GROQ_API_KEY),) \
 		-v $(PWD)/outputs:/app/outputs \
@@ -150,7 +150,7 @@ docker-run: docker-build
 docker-shell: docker-build
 	@echo "Starting interactive shell in Docker container..."
 	docker run --rm -it \
-		-e ENTREZ_EMAIL=$(ENTREZ_EMAIL) \
+		-e NCBI_EMAIL=$(NCBI_EMAIL) \
 		$(if $(NCBI_API_KEY),-e NCBI_API_KEY=$(NCBI_API_KEY),) \
 		$(if $(GROQ_API_KEY),-e GROQ_API_KEY=$(GROQ_API_KEY),) \
 		-v $(PWD)/outputs:/app/outputs \

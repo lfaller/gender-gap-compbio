@@ -11,7 +11,7 @@ services:
     # Environment variables
     environment:
       # Required: NCBI email (users should set this)
-      ENTREZ_EMAIL: ${ENTREZ_EMAIL:-your.email@example.com}
+      NCBI_EMAIL: ${NCBI_EMAIL:-your.email@example.com}
 
       # Optional: NCBI API key (for higher rate limits)
       NCBI_API_KEY: ${NCBI_API_KEY:-}

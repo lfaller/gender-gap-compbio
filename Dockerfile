@@ -1,6 +1,6 @@
 # Multi-stage build for reproducible analysis environment
 # Stage 1: Base image with dependencies
-FROM python:3.9-slim AS base
+FROM python:3.11-slim AS base
 
 WORKDIR /app
 
@@ -16,12 +16,12 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # Stage 2: Runtime image with application
-FROM python:3.9-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
 # Copy Python packages from builder stage
-COPY --from=base /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+COPY --from=base /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=base /usr/local/bin /usr/local/bin
 
 # Copy application code
