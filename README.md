@@ -140,7 +140,7 @@ Register for free API keys and add them to your environment:
 
 ```bash
 # NCBI API key (for PubMed data fetching)
-export ENTREZ_EMAIL="your_email@example.com"  # Required for NCBI API
+export NCBI_EMAIL="your_email@example.com"  # Required for NCBI API
 
 # Groq API key (for LLM-based gender classification of unknown names)
 # Required for full reproducibility; get key at https://console.groq.com/
@@ -175,7 +175,7 @@ docker run --rm \
 
 # Or use Make shortcuts
 make docker-build
-make docker-run ENTREZ_EMAIL=your.email@example.com
+make docker-run NCBI_EMAIL=your.email@example.com
 ```
 
 See [DOCKER.md](DOCKER.md) for full Docker documentation, including `docker-compose` usage and development workflows.

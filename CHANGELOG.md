@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Reproducibility audit: 11 bugs fixed** (see [REPRODUCIBILITY_FIXES.md](./REPRODUCIBILITY_FIXES.md) for full details)
+  - **Makefile — wrong script paths (Critical):** `make infer`, `make classify`, and `make preprocess-journals` all invoked scripts without the `scripts/` path prefix, causing immediate "file not found" errors. `make classify` also referenced a non-existent filename (`classify_names.py` instead of `classify_names_retry.py`).
+  - **Environment variable mismatch (Critical):** `make setup` wrote `ENTREZ_EMAIL` to `.env` but `cli.py` reads `NCBI_EMAIL`. Any user following `make setup` would have a broken `make fetch`. Standardised on `NCBI_EMAIL` throughout `Makefile`, `README.md`, and `.env.example`.
+  - **`cli.py infer` was a non-functional stub (Critical):** The command only printed instructions instead of running inference. Fixed to invoke `scripts/run_gender_inference_db.py` via `subprocess`.
+  - **`cli.py run` exited early (Critical):** Hard `sys.exit(0)` after Step 2 made Steps 3 (analyze) and 4 (figures) unreachable dead code. Removed early exit; full pipeline now runs to completion.
+  - **Zenodo download URL returned JSON instead of file data (Critical):** Missing `/content` suffix caused `curl` to download a JSON metadata blob instead of binary file content, breaking `gzip.open()` and `pd.read_csv()`.
+  - **`cli.py --help` crashed on Windows (Critical):** `→` (U+2192) in the `run` command docstring caused `UnicodeEncodeError` on Windows cp1252 terminals. Replaced with `->`.
+  - **`cli.py analyze` error message pointed to non-existent path (Minor):** Error suggestion said `python run_gender_inference_db.py` (root-level, does not exist). Updated to `python cli.py infer`.
+  - **`requirements.txt` unpinned versions (Minor):** Changed from `>=` to three-component `~=X.Y.0` (e.g. `pandas~=2.2.0`) which pins to the specified major.minor series and only allows patch updates. Two-component `~=X.Y` (intermediate fix) was found to pin major only, allowing `groq 0.9` to resolve to `0.37.1`.
+  - **`.env.example` missing `GROQ_API_KEY` (Minor):** Added the key required for Tier 2 LLM classification. Removed two stale unused keys (`ARXIV_DELAY_SECONDS`, `GENDERIZE_API_KEY`).
+
 ### Changed
 - **Journal Impact Blog Post:** Enhanced clarity and consistency
   - Added Acknowledgments section recognizing Dr. Samantha Klasfeld and Amulya Shastry

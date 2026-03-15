@@ -125,7 +125,7 @@ def main():
 
     downloaded = 0
     for filename in files:
-        file_url = f"{ZENODO_API}/{filename}"
+        file_url = f"{ZENODO_API}/{filename}/content"
 
         # Determine destination
         if "scimagojr" in filename:
