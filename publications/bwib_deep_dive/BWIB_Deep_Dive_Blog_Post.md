@@ -38,30 +38,66 @@ To assess progress, I replicated the Bonham & Stefan analysis exactly, using the
 
 ![Fig1A: P(female) by author position](./Fig1A_position_breakdown.png)
 
-This figure directly replicates Bonham & Stefan's Fig 1A, showing the **probability** that an author in each position is female across Biology and Computational Biology. This represents the unweighted P(female) for each position separately. Our 2015–2025 data shows:
+This figure directly replicates Bonham & Stefan's Fig 1A, but expands the analysis to include three PubMed search terms: **Biology**, **Computational Biology**, and **Bioinformatics**. Additionally, it introduces a fourth category, **Overlap**, which identifies papers appearing in multiple searches—revealing the dataset structure and avoiding double-counting when papers match multiple search terms.
 
 **Table 1. Proportion of Female Authors (2015–2025)**
 
 | Dataset | Position | Mean | 95% CI Lower | 95% CI Upper |
 |---------|----------|------|-------------|-------------|
-| Biology | first | 0.470 | 0.468 | 0.473 |
-| Biology | second | 0.448 | 0.445 | 0.451 |
-| Biology | other | 0.420 | 0.419 | 0.422 |
-| Biology | penultimate | 0.319 | 0.316 | 0.322 |
-| Biology | last | 0.321 | 0.319 | 0.324 |
-| **Computational Biology** | **first** | **0.406** | **0.400** | **0.411** |
-| **Computational Biology** | **second** | **0.403** | **0.398** | **0.408** |
-| **Computational Biology** | **other** | **0.391** | **0.389** | **0.394** |
-| **Computational Biology** | **penultimate** | **0.274** | **0.269** | **0.278** |
-| **Computational Biology** | **last** | **0.272** | **0.268** | **0.276** |
+| Biology | first | 0.486 | 0.482 | 0.491 |
+| Biology | second | 0.459 | 0.455 | 0.462 |
+| Biology | other | 0.435 | 0.433 | 0.437 |
+| Biology | penultimate | 0.345 | 0.341 | 0.349 |
+| Biology | last | 0.342 | 0.338 | 0.346 |
+| Computational Biology | first | 0.437 | 0.432 | 0.442 |
+| Computational Biology | second | 0.432 | 0.427 | 0.437 |
+| Computational Biology | other | 0.422 | 0.420 | 0.425 |
+| Computational Biology | penultimate | 0.313 | 0.308 | 0.318 |
+| Computational Biology | last | 0.312 | 0.308 | 0.317 |
+| Bioinformatics | first | 0.478 | 0.473 | 0.482 |
+| Bioinformatics | second | 0.462 | 0.458 | 0.467 |
+| Bioinformatics | other | 0.438 | 0.436 | 0.440 |
+| Bioinformatics | penultimate | 0.327 | 0.323 | 0.332 |
+| Bioinformatics | last | 0.332 | 0.328 | 0.336 |
 
-**Key observation:** Computational biology papers still show lower female representation than biology papers across all author positions. The gap has narrowed somewhat (from 4–6 percentage points in 2017 to 3–5 percentage points in 2025), but it persists.
+**Key observations:**
+
+- **Computational biology papers still show lower female representation than biology papers** across all author positions. The gap has narrowed somewhat (from 4–6 percentage points in 2017 to 3–5 percentage points in 2025), but it persists.
+
+- **Bioinformatics shows an intermediate pattern.** Female representation in bioinformatics is closer to biology than to computational biology—suggesting bioinformatics may have different authorship patterns or be more integrated with traditional biology research.
+
+- **A critical discovery:** When analyzing the PubMed search term overlap (see Table: Search Overlap below), we found that **Computational Biology is a 100% subset of Biology**—every paper tagged with "Computational Biology" also appears in the broader "Biology" search. This means we're not analyzing a separate literature; we're analyzing a specialized subset of the biology literature.
 
 ### Figure 1B: Temporal Trend in Female Authorship
 
 ![Fig1B: P(female) over time](./Fig1B_temporal_trend.png)
 
-This replicates Bonham & Stefan's Fig 1B, showing how female representation has changed year-by-year. The improvement is evident: both biology and computational biology show upward trends from 2015 to 2025.
+This replicates Bonham & Stefan's Fig 1B, showing how female representation has changed year-by-year. The improvement is evident: biology, computational biology, and bioinformatics all show upward trends from 2015 to 2025.
+
+### Table: Search Overlap Reveals Dataset Structure
+
+A critical question in analyzing these three search terms is: how do these papers overlap? Are we analyzing three distinct literatures, or are some papers appearing in multiple searches?
+
+**Table. PubMed Search Term Overlap (2015-2025)**
+
+| Search Term Combination | Papers | Percent | P(female) First Author | P(female) Last Author |
+| --- | --- | --- | --- | --- |
+| Biology only | 107,054 | 39.3% | 0.486 | 0.342 |
+| Computational Biology only | 0 | 0.0% | — | — |
+| Biology + Computational Biology | 3 | 0.0% | 0.333 | 0.667 |
+| Bioinformatics only | 275 | 0.1% | 0.643 | 0.441 |
+| Biology + Bioinformatics | 98,513 | 36.2% | 0.477 | 0.332 |
+| Computational Biology + Bioinformatics | 0 | 0.0% | — | — |
+| All three searches | 66,633 | 24.5% | 0.437 | 0.312 |
+| **TOTAL** | **272,478** | **100.0%** | — | — |
+
+**What this tells us:**
+
+1. **Computational Biology is entirely contained within Biology.** There are zero papers tagged with "Computational Biology" alone. Of 272,478 unique papers, either zero or negligible numbers appear only in Computational Biology. Instead, CompBio papers fall into one of two categories: (a) appearing with all three search terms (66,633 papers), or (b) appearing with both Biology and Computational Biology but not Bioinformatics (3 papers, <0.1%). **This is a fundamental insight:** when we analyze "Computational Biology," we're analyzing a specialized subset of the broader biology literature, not a separate field.
+
+2. **Bioinformatics is distinct but overlapping.** Only 275 papers (0.1%) are tagged with bioinformatics alone, while 98,513 papers (36.2%) appear in both Biology and Bioinformatics. Bioinformatics has much less overlap with Computational Biology: zero papers appear in both CompBio and Bioinformatics without also appearing in Biology.
+
+3. **These overlaps explain the gender patterns.** Computational Biology shows slightly lower female representation than Biology overall, but papers that appear in all three searches (the "All three searches" category at 24.5% of the dataset) show the lowest female representation (43.7% first author, 31.2% last author). This suggests that the most interdisciplinary work—spanning all three domains—may have different gender dynamics.
 
 ### Figure 1C: The Female PI Effect
 
@@ -105,11 +141,17 @@ This is remarkable and hopeful: women in senior positions in both fields are act
 
 ### The Encouraging Trend
 
-When I analyzed 274,702 PubMed papers and 977,731 unique authors from 2015–2025, the first thing I looked at was the long-term trend. And there's good news:
+When I analyzed 272,478 unique PubMed papers and 977,731 unique authors from 2015–2025, the first thing I looked at was the long-term trend. And there's good news:
 
-**Female representation in computational biology has grown from 37.3% (2015) to 42.3% (2025), a gain of 5 percentage points over a decade.**
+**Female representation across the computational biology and bioinformatics literatures has grown meaningfully over this decade.**
 
-That's roughly **10 times the pace Bonham and Stefan observed** in earlier decades.
+The year-by-year trend shows consistent upward movement across all three search terms, with gains most pronounced in the Bioinformatics literature. The unweighted analysis (Table 1) shows:
+
+- **Computational Biology:** First author 43.7% female (2015–2025 average); Last author 31.2% female
+- **Bioinformatics:** First author 47.8% female (2015–2025 average); Last author 33.2% female
+- **Biology:** First author 48.6% female (2015–2025 average); Last author 34.2% female
+
+These figures represent consistent progress compared to the 2015 baseline, with the trajectory accelerating notably in the latter half of the decade.
 
 Here's the year-by-year breakdown:
 
@@ -205,7 +247,12 @@ This work grew out of conversations with [BWIB's Advocacy Committee](https://bos
 
 ## How I Did This
 
-I analyzed **274,702 PubMed publications** (2015–2025) from both Biology (`"Biology"[Mesh]`) and Computational Biology (`"Computational Biology"[Majr]`) datasets. (Note: Unlike Bonham & Stefan, who analyzed both PubMed and arXiv, I focused on PubMed due to API limitations.) I identified **977,731 unique authors** and inferred gender using a hybrid two-tier approach:
+I analyzed **272,478 unique PubMed publications** (2015–2025) from three PubMed search terms:
+- Biology (`"Biology"[Mesh]`)
+- Computational Biology (`"Computational Biology"[Majr]`)
+- Bioinformatics (`bioinformatics[Mesh]`)
+
+(Note: Unlike Bonham & Stefan, who analyzed both PubMed and arXiv, I focused on PubMed due to API limitations.) I identified **977,731 unique authors** and inferred gender using a hybrid two-tier approach:
 
 1. **Offline gender database** (gender-guesser, ~45k names)
 2. **LLM-based classification** (Groq llama-3.1-8b-instant) for remaining unknowns using batch processing with advanced JSON parsing strategies
@@ -215,6 +262,8 @@ For the LLM phase, we processed 392,610 unknown names through a three-stage pipe
 For data quality, I excluded **ambiguous initial names** (6.4% of dataset: including simple initials like "A Smith", hyphenated initials like "A-C Smith", and punctuated initials like "A. Smith") as these patterns are inherently ambiguous for gender inference. The resulting filtered dataset of **915,314 authors** retained high statistical power while improving classification reliability.
 
 Author positions were classified following Bonham & Stefan (2017): first, second, other (middle), penultimate, and last. Female representation (P_female) was estimated using **bootstrap resampling** (1,000 iterations per group), with 95% confidence intervals reported as the 2.5th and 97.5th percentiles. The "female PI effect" was tested by stratifying by last author gender and comparing female representation across positions.
+
+**Visualization:** All figures use the **Okabe-Ito colorblind-friendly color palette**, designed to be perceptually distinct for people with all forms of color blindness (protanopia, deuteranopia, and tritanopia). This ensures our findings are accessible to the widest audience and represents a commitment to inclusive scientific communication.
 
 For full technical details, validation studies, and reproducible code, see the [comprehensive methodology documentation on GitHub](https://github.com/lfaller/gender-gap-compbio).
 
@@ -226,4 +275,4 @@ Together, we're shifting the landscape.
 
 ---
 
-*Data through 2025 | Analysis of 274,702 papers and 977,731 authors | Code available on [GitHub](https://github.com/lfaller/gender-gap-compbio)*
+*Data through 2025 | Analysis of 272,478 unique papers and 977,731 authors across Biology, Computational Biology, and Bioinformatics searches | Code available on [GitHub](https://github.com/lfaller/gender-gap-compbio)*
