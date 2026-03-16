@@ -93,7 +93,7 @@ def generate_figure_1c(data):
     ax.set_xlabel('Author Position', fontsize=12, fontweight='bold')
     ax.set_ylabel('P(female)', fontsize=12, fontweight='bold')
     ax.set_title('Primary Articles 2015-2025', fontsize=13, fontweight='bold')
-    ax.set_ylim([0, 0.6])
+    ax.set_ylim([0, 0.75])
     ax.legend(fontsize=10, loc='upper right')
     ax.grid(axis='y', alpha=0.3)
 
