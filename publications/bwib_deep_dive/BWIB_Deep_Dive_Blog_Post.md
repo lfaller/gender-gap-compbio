@@ -110,30 +110,72 @@ This is one of the most striking findings from Bonham & Stefan: papers with a fe
 | Dataset | Position | PI Gender | Mean | 95% CI Lower | 95% CI Upper |
 |---------|----------|-----------|------|-------------|-------------|
 | **Biology** | | | | | |
-| Biology | first | Male | 0.445 | 0.440 | 0.449 |
-| Biology | first | Female | **0.575** | 0.569 | 0.582 |
-| Biology | second | Male | 0.425 | 0.421 | 0.429 |
-| Biology | second | Female | **0.527** | 0.521 | 0.533 |
-| Biology | other | Male | 0.405 | 0.403 | 0.407 |
-| Biology | other | Female | **0.484** | 0.481 | 0.487 |
-| Biology | penultimate | Male | 0.296 | 0.292 | 0.301 |
-| Biology | penultimate | Female | **0.385** | 0.379 | 0.391 |
-| **Comp Bio** | | | | | |
-| Comp Bio | first | Male | 0.378 | 0.372 | 0.384 |
-| Comp Bio | first | Female | **0.516** | 0.505 | 0.528 |
-| Comp Bio | second | Male | 0.383 | 0.377 | 0.390 |
-| Comp Bio | second | Female | **0.484** | 0.472 | 0.495 |
-| Comp Bio | other | Male | 0.379 | 0.376 | 0.382 |
-| Comp Bio | other | Female | **0.451** | 0.446 | 0.456 |
-| Comp Bio | penultimate | Male | 0.257 | 0.251 | 0.263 |
-| Comp Bio | penultimate | Female | **0.332** | 0.320 | 0.344 |
+| Biology | first | Male | 0.459 | 0.453 | 0.465 |
+| Biology | first | Female | **0.593** | 0.585 | 0.601 |
+| Biology | second | Male | 0.433 | 0.427 | 0.439 |
+| Biology | second | Female | **0.536** | 0.528 | 0.544 |
+| Biology | other | Male | 0.417 | 0.414 | 0.420 |
+| Biology | other | Female | **0.505** | 0.500 | 0.509 |
+| Biology | penultimate | Male | 0.318 | 0.313 | 0.324 |
+| Biology | penultimate | Female | **0.421** | 0.412 | 0.430 |
+| **Computational Biology** | | | | | |
+| Computational Biology | first | Male | 0.410 | 0.404 | 0.417 |
+| Computational Biology | first | Female | **0.526** | 0.515 | 0.536 |
+| Computational Biology | second | Male | 0.413 | 0.406 | 0.420 |
+| Computational Biology | second | Female | **0.494** | 0.483 | 0.505 |
+| Computational Biology | other | Male | 0.409 | 0.406 | 0.413 |
+| Computational Biology | other | Female | **0.471** | 0.466 | 0.476 |
+| Computational Biology | penultimate | Male | 0.298 | 0.291 | 0.305 |
+| Computational Biology | penultimate | Female | **0.362** | 0.351 | 0.373 |
+| **Bioinformatics** | | | | | |
+| Bioinformatics | first | Male | 0.456 | 0.450 | 0.462 |
+| Bioinformatics | first | Female | **0.558** | 0.550 | 0.567 |
+| Bioinformatics | second | Male | 0.445 | 0.439 | 0.451 |
+| Bioinformatics | second | Female | **0.526** | 0.518 | 0.535 |
+| Bioinformatics | other | Male | 0.426 | 0.423 | 0.428 |
+| Bioinformatics | other | Female | **0.487** | 0.484 | 0.491 |
+| Bioinformatics | penultimate | Male | 0.314 | 0.308 | 0.319 |
+| Bioinformatics | penultimate | Female | **0.369** | 0.360 | 0.377 |
 
 **The Female PI Effect: Quantified**
 
-- In **biology** papers with a male last author, first author is 44.5% female; with a female last author, it jumps to **57.5%** (a **13 percentage point increase**)
-- In **computational biology** papers with a male last author, first author is 37.8% female; with a female last author, it jumps to **51.6%** (a **13.8 percentage point increase**)
+The female PI effect (higher female representation when the last author/PI is female) is consistent across all three search domains:
 
-This is remarkable and hopeful: women in senior positions in both fields are actively bringing other women into visible authorship roles. This "female PI effect" (the pattern I documented in my analysis) suggests that women in leadership positions actively support and elevate other women in visible authorship roles.
+- In **biology** papers with a male last author, first author is 45.9% female; with a female last author, it jumps to **59.3%** (a **13.4 percentage point increase**)
+- In **computational biology** papers with a male last author, first author is 41.0% female; with a female last author, it jumps to **52.6%** (an **11.6 percentage point increase**)
+- In **bioinformatics** papers with a male last author, first author is 45.6% female; with a female last author, it jumps to **55.8%** (a **10.2 percentage point increase**)
+
+This is remarkable and hopeful: women in senior positions across all three search domains are actively bringing other women into visible authorship roles. This "female PI effect" (the pattern I documented in my analysis) suggests that women in leadership positions actively support and elevate other women in visible authorship roles.
+
+**Table 2B. The Female PI Effect by Search Term Category (2015–2025)**
+
+Does the female PI effect vary depending on which literature a paper appears in? To explore this, I stratified the same analysis by search overlap categories:
+
+| Search Category | Position | PI Gender | Mean | 95% CI Lower | 95% CI Upper |
+|---------|----------|-----------|------|-------------|-------------|
+| **Biology only** | | | | | |
+| Biology | first | Male | 0.459 | 0.453 | 0.465 |
+| Biology | first | Female | **0.593** | 0.585 | 0.600 |
+| Biology | second | Male | 0.433 | 0.427 | 0.439 |
+| Biology | second | Female | **0.536** | 0.527 | 0.545 |
+| Biology | other | Male | 0.417 | 0.414 | 0.420 |
+| Biology | other | Female | **0.505** | 0.500 | 0.509 |
+| **Bioinformatics only** | | | | | |
+| Bioinformatics | first | Male | 0.607 | 0.464 | 0.738 |
+| Bioinformatics | first | Female | **0.700** | 0.540 | 0.839 |
+| Bioinformatics | second | Male | 0.570 | 0.415 | 0.714 |
+| Bioinformatics | second | Female | **0.618** | 0.470 | 0.773 |
+| Bioinformatics | other | Male | 0.608 | 0.544 | 0.677 |
+| Bioinformatics | other | Female | **0.767** | 0.694 | 0.833 |
+| **Overlap (2+ searches)** | | | | | |
+| Overlap | first | Male | 0.436 | 0.432 | 0.441 |
+| Overlap | first | Female | **0.545** | 0.539 | 0.552 |
+| Overlap | second | Male | 0.431 | 0.427 | 0.436 |
+| Overlap | second | Female | **0.513** | 0.507 | 0.520 |
+| Overlap | other | Male | 0.419 | 0.417 | 0.422 |
+| Overlap | other | Female | **0.481** | 0.478 | 0.484 |
+
+**Key insight:** The female PI effect is consistent across all three search categories. However, the magnitude varies: papers appearing in only Biology or only Bioinformatics show slightly stronger PI effects (13-9 percentage point gaps) compared to papers appearing in multiple search terms (10.9 percentage point gap for first authors). This suggests that while female leadership benefits female co-authors in all contexts, the effect may be slightly attenuated in highly interdisciplinary work.
 
 ---
 

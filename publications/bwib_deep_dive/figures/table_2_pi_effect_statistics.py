@@ -17,7 +17,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 from src.bootstrap import bootstrap_pfemale
-from .utils import get_paper_author_gender_data, OUTPUT_DIR
+from .utils import get_paper_author_gender_data, OUTPUT_DIR, _label_dataset
 
 
 def generate_table_2(data):
@@ -74,6 +74,77 @@ def generate_table_2(data):
     return df
 
 
+def generate_table_2_by_overlap(data, bio_pmids, comp_pmids, bioinf_pmids):
+    """
+    Generate Table 2 stratified by search term overlaps.
+
+    Args:
+        data: DataFrame from get_paper_author_gender_data() with PI gender information
+        bio_pmids, comp_pmids, bioinf_pmids: Sets of PMIDs from each search
+
+    Returns:
+        DataFrame with columns: Search Term Category, Position, PI Gender, Mean, 95% CI Lower, 95% CI Upper
+    """
+    results = []
+
+    # Label each paper by search term combination
+    data = data.copy()
+    data['overlap_category'] = data['pmid'].astype(str).apply(
+        lambda p: _label_dataset(p, bio_pmids, comp_pmids, bioinf_pmids, show_overlap=True)
+    )
+
+    # Define categories to include (skip empty ones)
+    categories = [
+        'Biology',
+        'Computational Biology',
+        'Bioinformatics',
+        'Overlap'
+    ]
+
+    for category in categories:
+        cat_data = data[data['overlap_category'] == category]
+
+        if len(cat_data) == 0:
+            continue
+
+        for position in ['first', 'second', 'other', 'penultimate']:
+            for pi_gender in ['Male', 'Female']:
+                pi_gender_data = cat_data[cat_data['last_author_gender'] == pi_gender.lower()]
+                pos_data = pi_gender_data[pi_gender_data['position'] == position]
+
+                if len(pos_data) > 0:
+                    probs = pos_data['p_female'].dropna().tolist()
+                    mean, ci_lower, ci_upper = bootstrap_pfemale(probs, n_iterations=1000)
+
+                    results.append({
+                        'Search Category': category,
+                        'Position': position,
+                        'PI Gender': pi_gender,
+                        'Mean': round(mean, 3) if mean else None,
+                        '95% CI Lower': round(ci_lower, 3) if ci_lower else None,
+                        '95% CI Upper': round(ci_upper, 3) if ci_upper else None,
+                        'N': len(probs)
+                    })
+
+    df = pd.DataFrame(results)
+
+    # Save as CSV
+    csv_path = OUTPUT_DIR / "Table2_pi_effect_by_search_overlap.csv"
+    df.to_csv(csv_path, index=False)
+
+    # Create formatted markdown table
+    markdown_path = OUTPUT_DIR / "Table2_pi_effect_by_search_overlap.md"
+    with open(markdown_path, 'w') as f:
+        f.write("## Table 2B. Female PI Effect by Search Term Category (2015–2025)\n\n")
+        f.write("| Search Category | Position | PI Gender | Mean | 95% CI Lower | 95% CI Upper |\n")
+        f.write("|---------|----------|-----------|------|-------------|-------------|\n")
+        for _, row in df.iterrows():
+            f.write(f"| {row['Search Category']} | {row['Position']} | {row['PI Gender']} | {row['Mean']:.3f} | {row['95% CI Lower']:.3f} | {row['95% CI Upper']:.3f} |\n")
+
+    print("✓ Table 2B (by search overlap) saved")
+    return df
+
+
 def main():
     """Run Table 2 generation."""
     print("\n" + "=" * 70)
@@ -84,9 +155,24 @@ def main():
     data = get_paper_author_gender_data(start_year=2015, end_year=2025)
     print(f"✓ Loaded {len(data):,} author records with PI gender\n")
 
-    print("GENERATING TABLE")
+    print("GENERATING TABLE 2 (by dataset)")
     print("-" * 70)
     table = generate_table_2(data)
+    print()
+
+    # Also generate stratified version by search overlap
+    print("GENERATING TABLE 2B (by search term overlap)")
+    print("-" * 70)
+    from pathlib import Path
+    bio_csv   = Path("data/processed/pubmed_biology_2015_2025.csv")
+    comp_csv  = Path("data/processed/pubmed_compbio_2015_2025.csv")
+    bioinf_csv = Path("data/processed/pubmed_bioinformatics_2015_2025.csv")
+
+    bio_pmids   = set(pd.read_csv(bio_csv, usecols=['pmid'])['pmid'].astype(str).unique())
+    comp_pmids  = set(pd.read_csv(comp_csv, usecols=['pmid'])['pmid'].astype(str).unique())
+    bioinf_pmids = set(pd.read_csv(bioinf_csv, usecols=['pmid'])['pmid'].astype(str).unique())
+
+    table_overlap = generate_table_2_by_overlap(data, bio_pmids, comp_pmids, bioinf_pmids)
     print()
 
     print("=" * 70)
@@ -95,6 +181,8 @@ def main():
     print(f"\nOutput files saved to: {OUTPUT_DIR}")
     print("  - Table2_female_authors_with_female_pi.csv")
     print("  - Table2_female_authors_with_female_pi.md")
+    print("  - Table2_pi_effect_by_search_overlap.csv")
+    print("  - Table2_pi_effect_by_search_overlap.md")
     print()
 
 
