@@ -38,7 +38,7 @@ To assess progress, I replicated the Bonham & Stefan analysis, using their same 
 
 ![Fig1A: P(female) by author position](./Fig1A_position_breakdown.png)
 
-This figure directly replicates Bonham & Stefan's Fig 1A, but expands the analysis to include three PubMed search terms: **Biology**, **Computational Biology**, and **Bioinformatics**. Additionally, it introduces a fourth category, **Overlap**, which identifies papers appearing in multiple searches, revealing the dataset structure and avoiding double-counting when papers match multiple search terms.
+This figure directly replicates Bonham & Stefan's Fig 1A, but expands the analysis to include three PubMed search terms: **Biology**, **Computational Biology**, and **Bioinformatics**. These represent different scopes of the literature, from general biology to specialized computational and bioinformatic approaches.
 
 **Table 1. Proportion of Female Authors (2015–2025)**
 
@@ -62,42 +62,17 @@ This figure directly replicates Bonham & Stefan's Fig 1A, but expands the analys
 
 **Key observations:**
 
-- **A critical discovery:** When analyzing the PubMed search term overlap (see Table: Search Overlap below), we found that **Computational Biology is a 100% subset of Biology**: every paper tagged with "Computational Biology" also appears in the broader "Biology" search. This is why the "Computational Biology only" bars appear as zero everywhere in Figure 1A. There are literally zero papers that appear exclusively in the Computational Biology search. This means we're not analyzing a separate literature; we're analyzing a specialized subset of the biology literature.
+- **Computational biology shows lower female representation than the broader biology literature** across all author positions, with gaps ranging from 3–5 percentage points. This gap has narrowed somewhat from 2017 (when it was 4–6 percentage points), but it persists.
 
-- **Computational biology papers do show lower female representation than biology papers** across all author positions, but this reflects the composition of papers in the intersection, not a separate discipline. The gap has narrowed somewhat (from 4–6 percentage points in 2017 to 3–5 percentage points in 2025), but it persists.
+- **Bioinformatics shows female representation between biology and computational biology.** This intermediate pattern suggests bioinformatics may have different authorship structures or be more integrated with traditional biology.
 
-- **Bioinformatics shows a distinct pattern.** Female representation in bioinformatics is closer to biology than to computational biology, suggesting bioinformatics may have different authorship patterns or be more integrated with traditional biology research. Notably, bioinformatics is not a complete subset of any other search term, indicating a more independent literature.
+- **Position matters everywhere.** Across all three search terms, female representation drops sharply at senior positions (penultimate and last author), suggesting that women remain underrepresented in senior leadership roles.
 
 ### Figure 1B: Temporal Trend in Female Authorship
 
 ![Fig1B: P(female) over time](./Fig1B_temporal_trend.png)
 
 This replicates Bonham & Stefan's Fig 1B, showing how female representation has changed year-by-year. The improvement is evident: biology, computational biology, and bioinformatics all show upward trends from 2015 to 2025.
-
-### Table: Search Overlap Reveals Dataset Structure
-
-A critical question in analyzing these three search terms is: how do these papers overlap? Are we analyzing three distinct literatures, or are some papers appearing in multiple searches?
-
-**Table. PubMed Search Term Overlap (2015-2025)**
-
-| Search Term Combination | Papers | Percent | P(female) First Author | P(female) Last Author |
-| --- | --- | --- | --- | --- |
-| Biology only | 107,054 | 39.3% | 0.486 | 0.342 |
-| Computational Biology only | 0 | 0.0% | N/A | N/A |
-| Biology + Computational Biology | 3 | 0.0% | 0.333 | 0.667 |
-| Bioinformatics only | 275 | 0.1% | 0.643 | 0.441 |
-| Biology + Bioinformatics | 98,513 | 36.2% | 0.477 | 0.332 |
-| Computational Biology + Bioinformatics | 0 | 0.0% | N/A | N/A |
-| All three searches | 66,633 | 24.5% | 0.437 | 0.312 |
-| **TOTAL** | **272,478** | **100.0%** | N/A | N/A |
-
-**What this tells us:**
-
-1. **Computational Biology is entirely contained within Biology.** There are zero papers tagged with "Computational Biology" alone. Of 272,478 unique papers, none are labeled exclusively as Computational Biology. Instead, CompBio papers fall into one of two categories: (a) appearing with all three search terms (66,633 papers), or (b) appearing with both Biology and Computational Biology but not Bioinformatics (3 papers, <0.1%). **This is a fundamental insight:** when we analyze "Computational Biology," we're analyzing a specialized subset of the broader biology literature, not a separate field.
-
-2. **Bioinformatics is distinct but overlapping.** Only 275 papers (0.1%) are tagged with bioinformatics alone, while 98,513 papers (36.2%) appear in both Biology and Bioinformatics. Bioinformatics has much less overlap with Computational Biology: zero papers appear in both CompBio and Bioinformatics without also appearing in Biology.
-
-3. **These overlaps explain the gender patterns.** Computational Biology shows slightly lower female representation than Biology overall, but papers that appear in all three searches (the "All three searches" category at 24.5% of the dataset) show the lowest female representation (43.7% first author, 31.2% last author). This suggests that the most interdisciplinary work (spanning all three domains) may have different gender dynamics.
 
 ### Figure 1C: The Female PI Effect
 
@@ -304,7 +279,11 @@ I analyzed **272,478 unique PubMed publications** (2015–2025) from three PubMe
 - Computational Biology (`"Computational Biology"[Majr]`)
 - Bioinformatics (`bioinformatics[Mesh]`)
 
-(Note: Unlike Bonham & Stefan, who analyzed both PubMed and arXiv, I focused on PubMed due to API limitations. Also note: MeSH indexing in my dataset transitioned from human indexers to the automated MTIX algorithm in April 2022, introducing a potential methodological discontinuity discussed in the limitations section.) I identified **977,731 unique authors** and inferred gender using a hybrid two-tier approach:
+(Note: Unlike Bonham & Stefan, who analyzed both PubMed and arXiv, I focused on PubMed due to API limitations. Also note: MeSH indexing in my dataset transitioned from human indexers to the automated MTIX algorithm in April 2022, introducing a potential methodological discontinuity discussed in the limitations section.)
+
+**On search term overlap:** These three search terms have substantial overlap. Computational Biology is a 100% subset of the broader Biology search (every CompBio paper also appears in Biology), while Bioinformatics is more independent but still shares significant overlap with Biology. This overlap is expected: we're analyzing different scopes and perspectives on the same underlying literature, not three separate fields. The analyses presented above report results for each search term independently, which means some papers are counted in multiple categories.
+
+I identified **977,731 unique authors** and inferred gender using a hybrid two-tier approach:
 
 1. **Offline gender database** (gender-guesser, ~45k names)
 2. **LLM-based classification** (Groq llama-3.1-8b-instant) for remaining unknowns using batch processing with advanced JSON parsing strategies
