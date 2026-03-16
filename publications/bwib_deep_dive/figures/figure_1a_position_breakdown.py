@@ -119,7 +119,7 @@ def generate_figure_1a(data):
     ax.set_title('Primary Articles 2015-2025', fontsize=13, fontweight='bold')
     ax.set_xticks(x)
     ax.set_xticklabels([p.capitalize() for p in positions])
-    ax.set_ylim([0, 0.5])
+    ax.set_ylim([0, 0.65])
     ax.legend()
     ax.grid(axis='y', alpha=0.3)
 
