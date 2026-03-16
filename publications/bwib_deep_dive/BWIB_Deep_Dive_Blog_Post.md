@@ -7,7 +7,7 @@
 
 ## The Question I Asked
 
-Right now, BWIB is collecting community data through our landscape survey (asking women in bioinformatics directly about their experiences, barriers, and aspirations). But while listening to our community, I also wanted to know: what does the *published* literature actually tell us about where we've been?
+Right now, BWIB is collecting community data through our landscape survey (asking professionals in bioinformatics directly about their experiences, barriers, and aspirations). But while listening to our community, I also wanted to know: what does the *published* literature actually tell us about where we've been?
 
 Eight years ago, two researchers named [Bonham and Stefan published a landmark paper](https://doi.org/10.1371/journal.pcbi.1005134) in *PLoS Computational Biology* that answered a simple question: Are women underrepresented in computational biology authorship? Their answer was yes. But the current year is 2026. Does their finding still hold? What has changed, and what hasn't?
 
