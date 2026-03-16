@@ -149,33 +149,35 @@ This is remarkable and hopeful: women in senior positions across all three searc
 
 **Table 2B. The Female PI Effect by Search Term Category (2015–2025)**
 
-Does the female PI effect vary depending on which literature a paper appears in? To explore this, I stratified the same analysis by search overlap categories:
+Does the female PI effect vary depending on which literature a paper appears in? To explore this, I stratified the same analysis by search overlap categories. The sample sizes (N column) reveal important differences in the stability of these estimates:
 
-| Search Category | Position | PI Gender | Mean | 95% CI Lower | 95% CI Upper |
-|---------|----------|-----------|------|-------------|-------------|
-| **Biology only** | | | | | |
-| Biology | first | Male | 0.459 | 0.453 | 0.465 |
-| Biology | first | Female | **0.593** | 0.585 | 0.600 |
-| Biology | second | Male | 0.433 | 0.427 | 0.439 |
-| Biology | second | Female | **0.536** | 0.527 | 0.545 |
-| Biology | other | Male | 0.417 | 0.414 | 0.420 |
-| Biology | other | Female | **0.505** | 0.500 | 0.509 |
-| **Bioinformatics only** | | | | | |
-| Bioinformatics | first | Male | 0.607 | 0.464 | 0.738 |
-| Bioinformatics | first | Female | **0.700** | 0.540 | 0.839 |
-| Bioinformatics | second | Male | 0.570 | 0.415 | 0.714 |
-| Bioinformatics | second | Female | **0.618** | 0.470 | 0.773 |
-| Bioinformatics | other | Male | 0.608 | 0.544 | 0.677 |
-| Bioinformatics | other | Female | **0.767** | 0.694 | 0.833 |
-| **Overlap (2+ searches)** | | | | | |
-| Overlap | first | Male | 0.436 | 0.432 | 0.441 |
-| Overlap | first | Female | **0.545** | 0.539 | 0.552 |
-| Overlap | second | Male | 0.431 | 0.427 | 0.436 |
-| Overlap | second | Female | **0.513** | 0.507 | 0.520 |
-| Overlap | other | Male | 0.419 | 0.417 | 0.422 |
-| Overlap | other | Female | **0.481** | 0.478 | 0.484 |
+| Search Category | Position | PI Gender | Mean | 95% CI Lower | 95% CI Upper | N |
+|---------|----------|-----------|------|-------------|-------------|---------|
+| **Biology only** | | | | | | |
+| Biology | first | Male | 0.459 | 0.453 | 0.465 | 26,872 |
+| Biology | first | Female | **0.593** | 0.584 | 0.600 | 13,977 |
+| Biology | second | Male | 0.433 | 0.427 | 0.439 | 25,056 |
+| Biology | second | Female | **0.536** | 0.528 | 0.544 | 13,084 |
+| Biology | other | Male | 0.417 | 0.414 | 0.420 | 94,657 |
+| Biology | other | Female | **0.505** | 0.500 | 0.509 | 45,640 |
+| **Bioinformatics only** | | | | | | |
+| Bioinformatics | first | Male | 0.610 | 0.452 | 0.756 | 42 |
+| Bioinformatics | first | Female | **0.704** | 0.540 | 0.863 | 31 |
+| Bioinformatics | second | Male | 0.575 | 0.415 | 0.720 | 41 |
+| Bioinformatics | second | Female | **0.621** | 0.470 | 0.788 | 33 |
+| Bioinformatics | other | Male | 0.608 | 0.541 | 0.682 | 177 |
+| Bioinformatics | other | Female | **0.768** | 0.690 | 0.839 | 124 |
+| **Overlap (2+ searches)** | | | | | | |
+| Overlap | first | Male | 0.436 | 0.432 | 0.441 | 44,748 |
+| Overlap | first | Female | **0.545** | 0.539 | 0.552 | 21,240 |
+| Overlap | second | Male | 0.431 | 0.426 | 0.436 | 42,061 |
+| Overlap | second | Female | **0.513** | 0.507 | 0.520 | 20,192 |
+| Overlap | other | Male | 0.419 | 0.417 | 0.421 | 222,177 |
+| Overlap | other | Female | **0.481** | 0.478 | 0.484 | 107,165 |
 
-**Key insight:** The female PI effect is consistent across all three search categories. However, the magnitude varies: papers appearing in only Biology or only Bioinformatics show slightly stronger PI effects (13-9 percentage point gaps) compared to papers appearing in multiple search terms (10.9 percentage point gap for first authors). This suggests that while female leadership benefits female co-authors in all contexts, the effect may be slightly attenuated in highly interdisciplinary work.
+**Critical note on sample sizes:** The Biology-only and Overlap categories rest on large, robust sample sizes (thousands to hundreds of thousands of author records), yielding narrow confidence intervals. The Bioinformatics-only category, by contrast, is based on only 275 papers total, with some cells containing as few as 31-42 papers. This means the Bioinformatics-only estimates have much wider confidence intervals and should be interpreted with caution. The high point estimates (e.g., 0.704 for first authors with female PIs) may reflect genuine patterns, random variation, or a combination of both given the small sample.
+
+**Key insight:** Among the robust, well-powered categories (Biology-only with ~107K papers, and Overlap with ~165K papers), the female PI effect is consistent and clear. Papers appearing in only Biology show a 13.4 percentage point gap for first authors (45.9% when PI is male, 59.3% when female), while papers in multiple searches show a 10.9 percentage point gap. This suggests that while female leadership benefits female co-authors universally, the effect may be slightly attenuated in highly interdisciplinary work.
 
 ---
 

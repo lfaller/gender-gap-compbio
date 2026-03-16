@@ -136,10 +136,10 @@ def generate_table_2_by_overlap(data, bio_pmids, comp_pmids, bioinf_pmids):
     markdown_path = OUTPUT_DIR / "Table2_pi_effect_by_search_overlap.md"
     with open(markdown_path, 'w') as f:
         f.write("## Table 2B. Female PI Effect by Search Term Category (2015–2025)\n\n")
-        f.write("| Search Category | Position | PI Gender | Mean | 95% CI Lower | 95% CI Upper |\n")
-        f.write("|---------|----------|-----------|------|-------------|-------------|\n")
+        f.write("| Search Category | Position | PI Gender | Mean | 95% CI Lower | 95% CI Upper | N |\n")
+        f.write("|---------|----------|-----------|------|-------------|-------------|---------|\n")
         for _, row in df.iterrows():
-            f.write(f"| {row['Search Category']} | {row['Position']} | {row['PI Gender']} | {row['Mean']:.3f} | {row['95% CI Lower']:.3f} | {row['95% CI Upper']:.3f} |\n")
+            f.write(f"| {row['Search Category']} | {row['Position']} | {row['PI Gender']} | {row['Mean']:.3f} | {row['95% CI Lower']:.3f} | {row['95% CI Upper']:.3f} | {int(row['N']):,} |\n")
 
     print("✓ Table 2B (by search overlap) saved")
     return df
