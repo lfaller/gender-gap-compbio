@@ -211,6 +211,8 @@ Before I go further, I need to be honest about the limitations of this analysis.
 
 **Fourth:** What I'm measuring is *authorship*, not the workforce. Publication rates depend on funding, career stage distributions, research productivity norms, and many other factors beyond gender representation. These numbers describe who publishes, not necessarily who works in the field.
 
+**Fifth:** MeSH terms (the standardized subject headings used in PubMed) are assigned by trained indexers at the National Library of Medicine, not by authors. This manual indexing process introduces potential inconsistencies. A paper doing substantial computational work might not receive the "Computational Biology" MeSH term if the indexer judged the primary contribution to be in molecular biology or another domain. Additionally, during and after COVID-19, the NLM automated more of the indexing process using machine learning (MTIFL, the Medical Text Indexer). This shift from manual to partially automated indexing could introduce subtle discontinuities in how consistently "Computational Biology" and "Bioinformatics" terms are assigned across the 2015-2025 window. This is a potential confound that did not exist in Bonham and Stefan's original 1997-2014 dataset, and it's worth acknowledging when interpreting trends that span this transition period.
+
 That said, authorship in peer-reviewed literature is a meaningful signal; it's how scientific accomplishment is documented and credited. So these trends matter.
 
 ---
