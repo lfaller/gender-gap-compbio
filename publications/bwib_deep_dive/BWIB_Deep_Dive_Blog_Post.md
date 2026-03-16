@@ -248,6 +248,14 @@ I analyzed **272,478 unique PubMed publications** (2015–2025) from three PubMe
 
 **On search term overlap:** These three search terms have substantial overlap. Computational Biology is a 100% subset of the broader Biology search (every CompBio paper also appears in Biology), while Bioinformatics is more independent but still shares significant overlap with Biology. This overlap is expected: we're analyzing different scopes and perspectives on the same underlying literature, not three separate fields. The analyses presented above report results for each search term independently, which means some papers are counted in multiple categories.
 
+| Category | Papers | % of Total |
+|---|---|---|
+| Biology only | 107,054 | 39.3% |
+| Computational Biology only | 0 | 0.0% |
+| Bioinformatics only | 275 | 0.1% |
+| Two or more searches | 165,149 | 60.6% |
+| **TOTAL** | **272,478** | **100.0%** |
+
 I identified **977,731 unique authors** and inferred gender using a hybrid two-tier approach:
 
 1. **Offline gender database** (gender-guesser, ~45k names)
