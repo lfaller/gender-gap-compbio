@@ -18,16 +18,16 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 from src.bootstrap import bootstrap_by_multiple_groups
-from .utils import get_author_data, OUTPUT_DIR
+from .utils import get_author_data, OUTPUT_DIR, COLORS
 
 
 def generate_figure_1a(data):
     """
     Generate Fig 1A: Mean P(female) by author position.
-    Compares Biology vs Computational Biology.
+    Compares Biology, Computational Biology, Bioinformatics, and Overlap (2+ searches).
 
     Args:
-        data: DataFrame from get_author_data() with columns:
+        data: DataFrame from get_author_data(show_overlap=True) with columns:
               name, p_female, position, dataset, year, pmid
 
     Returns:
@@ -44,10 +44,14 @@ def generate_figure_1a(data):
     positions = ['first', 'second', 'other', 'penultimate', 'last']
     bio_data = {}
     comp_data = {}
+    bioinf_data = {}
+    overlap_data = {}
 
     for pos in positions:
         bio_row = results[(results['dataset'] == 'Biology') & (results['position'] == pos)]
         comp_row = results[(results['dataset'] == 'Computational Biology') & (results['position'] == pos)]
+        bioinf_row = results[(results['dataset'] == 'Bioinformatics') & (results['position'] == pos)]
+        overlap_row = results[(results['dataset'] == 'Overlap') & (results['position'] == pos)]
 
         if not bio_row.empty:
             bio_data[pos] = {
@@ -63,11 +67,25 @@ def generate_figure_1a(data):
                 'upper': comp_row['ci_upper'].values[0]
             }
 
+        if not bioinf_row.empty:
+            bioinf_data[pos] = {
+                'mean': bioinf_row['mean'].values[0],
+                'lower': bioinf_row['ci_lower'].values[0],
+                'upper': bioinf_row['ci_upper'].values[0]
+            }
+
+        if not overlap_row.empty:
+            overlap_data[pos] = {
+                'mean': overlap_row['mean'].values[0],
+                'lower': overlap_row['ci_lower'].values[0],
+                'upper': overlap_row['ci_upper'].values[0]
+            }
+
     # Create figure
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(12, 6))
 
     x = np.arange(len(positions))
-    width = 0.35
+    width = 0.20  # Width for four bars per position
 
     bio_means = [bio_data[p]['mean'] if p in bio_data else 0 for p in positions]
     bio_errors_lower = [bio_data[p]['mean'] - bio_data[p]['lower'] if p in bio_data else 0 for p in positions]
@@ -75,14 +93,26 @@ def generate_figure_1a(data):
     comp_means = [comp_data[p]['mean'] if p in comp_data else 0 for p in positions]
     comp_errors_lower = [comp_data[p]['mean'] - comp_data[p]['lower'] if p in comp_data else 0 for p in positions]
     comp_errors_upper = [comp_data[p]['upper'] - comp_data[p]['mean'] if p in comp_data else 0 for p in positions]
+    bioinf_means = [bioinf_data[p]['mean'] if p in bioinf_data else 0 for p in positions]
+    bioinf_errors_lower = [bioinf_data[p]['mean'] - bioinf_data[p]['lower'] if p in bioinf_data else 0 for p in positions]
+    bioinf_errors_upper = [bioinf_data[p]['upper'] - bioinf_data[p]['mean'] if p in bioinf_data else 0 for p in positions]
+    overlap_means = [overlap_data[p]['mean'] if p in overlap_data else 0 for p in positions]
+    overlap_errors_lower = [overlap_data[p]['mean'] - overlap_data[p]['lower'] if p in overlap_data else 0 for p in positions]
+    overlap_errors_upper = [overlap_data[p]['upper'] - overlap_data[p]['mean'] if p in overlap_data else 0 for p in positions]
 
     bio_errs = [bio_errors_lower, bio_errors_upper]
     comp_errs = [comp_errors_lower, comp_errors_upper]
+    bioinf_errs = [bioinf_errors_lower, bioinf_errors_upper]
+    overlap_errs = [overlap_errors_lower, overlap_errors_upper]
 
-    ax.bar(x - width/2, bio_means, width, label='Biology', color='black', alpha=0.8,
+    ax.bar(x - 1.5*width, bio_means, width, label='Biology', color=COLORS['Biology'], alpha=0.85,
            yerr=bio_errs, capsize=5, error_kw={'elinewidth': 1})
-    ax.bar(x + width/2, comp_means, width, label='Comp Bio', color='gray', alpha=0.8,
+    ax.bar(x - 0.5*width, comp_means, width, label='Computational Biology', color=COLORS['Computational Biology'], alpha=0.85,
            yerr=comp_errs, capsize=5, error_kw={'elinewidth': 1})
+    ax.bar(x + 0.5*width, bioinf_means, width, label='Bioinformatics', color=COLORS['Bioinformatics'], alpha=0.85,
+           yerr=bioinf_errs, capsize=5, error_kw={'elinewidth': 1})
+    ax.bar(x + 1.5*width, overlap_means, width, label='Overlap (2+ searches)', color=COLORS['Overlap'], alpha=0.85,
+           yerr=overlap_errs, capsize=5, error_kw={'elinewidth': 1})
 
     ax.set_xlabel('Author Position', fontsize=12, fontweight='bold')
     ax.set_ylabel('P(female)', fontsize=12, fontweight='bold')
@@ -109,7 +139,7 @@ def main():
     print("=" * 70 + "\n")
 
     print("Loading author data from database...")
-    data = get_author_data(start_year=2015, end_year=2025)
+    data = get_author_data(start_year=2015, end_year=2025, show_overlap=True)
     print(f"✓ Loaded {len(data):,} author records\n")
 
     print("GENERATING FIGURE")

@@ -1,0 +1,8 @@
+category,count
+Only Biology,108143
+Only Computational Biology,0
+Only Bioinformatics,684
+Biology ∩ Comp Bio (no Bioinf),3
+Biology ∩ Bioinf (no Comp Bio),99354
+Comp Bio ∩ Bioinf (no Biology),0
+Biology ∩ Comp Bio ∩ Bioinf,67202

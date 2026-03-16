@@ -17,6 +17,10 @@ client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 # Database connection
 db_path = "data/gender_data.db"
 
+# Groq API pricing for llama-3.1-8b-instant (as of 2025)
+GROQ_COST_PER_1M_INPUT = 0.05   # $0.05 per 1M input tokens
+GROQ_COST_PER_1M_OUTPUT = 0.08  # $0.08 per 1M output tokens
+
 def get_unknown_names():
     """Fetch all author IDs and names with unknown gender (length > 1)"""
     conn = sqlite3.connect(db_path)
@@ -74,8 +78,8 @@ def parse_json_response(response_text):
 
 def classify_names_batch(names_batch, batch_num):
     """
-    Classify a batch of names using Groq API with improved parsing
-    Returns a dict mapping name -> gender classification
+    Classify a batch of names using Groq API with improved parsing.
+    Returns: (classifications_dict, prompt_tokens, completion_tokens)
     """
     # Create a list of names for the prompt
     names_list = [name for _, name in names_batch]
@@ -104,22 +108,24 @@ Response format (must be valid JSON with proper escaping):
         )
 
         response_text = message.choices[0].message.content.strip()
-        print(f"  [Batch {batch_num}] Received response ({len(response_text)} chars)")
+        prompt_tokens = message.usage.prompt_tokens
+        completion_tokens = message.usage.completion_tokens
+        print(f"  [Batch {batch_num}] Received response ({len(response_text)} chars, {prompt_tokens} input + {completion_tokens} output tokens)")
 
         # Try to parse with improved strategy
         classifications = parse_json_response(response_text)
 
         if classifications:
             print(f"  [Batch {batch_num}] Successfully parsed {len(classifications)} classifications")
-            return classifications
+            return classifications, prompt_tokens, completion_tokens
         else:
             print(f"  [Batch {batch_num}] ERROR: Could not parse JSON response")
             print(f"  [Batch {batch_num}] Response preview: {response_text[:200]}")
-            return {}
+            return {}, prompt_tokens, completion_tokens
 
     except Exception as e:
         print(f"  [Batch {batch_num}] ERROR calling Groq API: {e}")
-        return {}
+        return {}, 0, 0
 
 def update_database(updates):
     """Update the database with gender classifications"""
@@ -148,13 +154,19 @@ def main():
     total_updated = 0
     total_batches = (len(unknown_names) + batch_size - 1) // batch_size
 
+    # Token tracking
+    total_input_tokens = 0
+    total_output_tokens = 0
+
     for i in range(0, len(unknown_names), batch_size):
         batch = unknown_names[i:i + batch_size]
         batch_num = i // batch_size + 1
         print(f"\n[{batch_num}/{total_batches}] Processing batch ({i+1}-{min(i+batch_size, len(unknown_names))} of {len(unknown_names)} names)...")
 
         # Classify the batch
-        classifications = classify_names_batch(batch, batch_num)
+        classifications, prompt_tokens, completion_tokens = classify_names_batch(batch, batch_num)
+        total_input_tokens += prompt_tokens
+        total_output_tokens += completion_tokens
 
         if not classifications:
             print(f"  Skipped batch {batch_num} (error or empty response)")
@@ -186,6 +198,19 @@ def main():
     conn.close()
 
     print(f"Remaining unknown names: {remaining}")
+    print(f"{'='*60}")
+
+    # Calculate and display API costs
+    print()
+    print("GROQ API USAGE")
+    print(f"{'='*60}")
+    print(f"Input tokens:  {total_input_tokens:,}")
+    print(f"Output tokens: {total_output_tokens:,}")
+    print(f"Total tokens:  {total_input_tokens + total_output_tokens:,}")
+
+    cost = (total_input_tokens / 1_000_000 * GROQ_COST_PER_1M_INPUT +
+            total_output_tokens / 1_000_000 * GROQ_COST_PER_1M_OUTPUT)
+    print(f"Estimated cost: ${cost:.4f}")
     print(f"{'='*60}")
 
 if __name__ == "__main__":

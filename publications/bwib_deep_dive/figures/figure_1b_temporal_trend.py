@@ -17,13 +17,13 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 from src.bootstrap import bootstrap_by_multiple_groups
-from .utils import get_author_data, OUTPUT_DIR
+from .utils import get_author_data, OUTPUT_DIR, COLORS
 
 
 def generate_figure_1b(data):
     """
     Generate Fig 1B: P(female) over time.
-    Line plot showing trend for Biology vs Computational Biology.
+    Line plot showing trend for Biology, Computational Biology, and Bioinformatics.
 
     Args:
         data: DataFrame from get_author_data() with columns:
@@ -43,16 +43,22 @@ def generate_figure_1b(data):
 
     bio_data = results[results['dataset'] == 'Biology'].sort_values('year')
     comp_data = results[results['dataset'] == 'Computational Biology'].sort_values('year')
+    bioinf_data = results[results['dataset'] == 'Bioinformatics'].sort_values('year')
 
     ax.errorbar(bio_data['year'], bio_data['mean'],
                 yerr=[bio_data['mean'] - bio_data['ci_lower'],
                       bio_data['ci_upper'] - bio_data['mean']],
-                marker='o', linestyle='-', label='Biology', color='black', alpha=0.8)
+                marker='o', linestyle='-', label='Biology', color=COLORS['Biology'], alpha=0.8)
 
     ax.errorbar(comp_data['year'], comp_data['mean'],
                 yerr=[comp_data['mean'] - comp_data['ci_lower'],
                       comp_data['ci_upper'] - comp_data['mean']],
-                marker='s', linestyle='--', label='Comp Bio', color='gray', alpha=0.8)
+                marker='s', linestyle='--', label='Computational Biology', color=COLORS['Computational Biology'], alpha=0.8)
+
+    ax.errorbar(bioinf_data['year'], bioinf_data['mean'],
+                yerr=[bioinf_data['mean'] - bioinf_data['ci_lower'],
+                      bioinf_data['ci_upper'] - bioinf_data['mean']],
+                marker='^', linestyle=':', label='Bioinformatics', color=COLORS['Bioinformatics'], alpha=0.8)
 
     ax.set_xlabel('Year', fontsize=12, fontweight='bold')
     ax.set_ylabel('P(female)', fontsize=12, fontweight='bold')

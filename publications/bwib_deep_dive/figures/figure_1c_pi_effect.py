@@ -18,7 +18,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 from src.bootstrap import bootstrap_pfemale
-from .utils import get_paper_author_gender_data, OUTPUT_DIR
+from .utils import get_paper_author_gender_data, OUTPUT_DIR, COLORS
 
 
 def generate_figure_1c(data):
@@ -34,7 +34,7 @@ def generate_figure_1c(data):
     """
     results = []
 
-    for dataset in ['Biology', 'Computational Biology']:
+    for dataset in ['Biology', 'Computational Biology', 'Bioinformatics']:
         dataset_data = data[data['dataset'] == dataset]
 
         for pi_gender in ['male', 'female']:
@@ -59,13 +59,13 @@ def generate_figure_1c(data):
     results_df = pd.DataFrame(results)
 
     # Create figure
-    fig, ax = plt.subplots(figsize=(14, 6))
+    fig, ax = plt.subplots(figsize=(16, 6))
 
     positions = ['first', 'second', 'other', 'penultimate']
-    datasets = ['Biology', 'Computational Biology']
+    datasets = ['Biology', 'Computational Biology', 'Bioinformatics']
 
-    colors_male = ['black', 'gray']
-    colors_female = ['darkred', 'lightcoral']
+    colors_male = [COLORS['Biology_male'], COLORS['Computational Biology_male'], COLORS['Bioinformatics_male']]
+    colors_female = [COLORS['Biology_female'], COLORS['Computational Biology_female'], COLORS['Bioinformatics_female']]
 
     for i, dataset in enumerate(datasets):
         ds_data = results_df[results_df['dataset'] == dataset]
@@ -97,12 +97,18 @@ def generate_figure_1c(data):
     ax.legend(fontsize=10, loc='upper right')
     ax.grid(axis='y', alpha=0.3)
 
-    # Custom x-axis labels
-    ax.set_xticks(range(len(positions)*2))
-    ax.set_xticklabels(
-        [f'{p}\n(Bio)' for p in positions] + [f'{p}\n(Comp)' for p in positions],
-        fontsize=10
-    )
+    # Custom x-axis labels for 3 datasets
+    section_offsets = [0, 4.5, 9.0]
+    section_labels = ['Biology', 'Computational Biology', 'Bioinformatics']
+    tick_positions = []
+    tick_labels = []
+    for offset, ds_label in zip(section_offsets, section_labels):
+        for j, pos in enumerate(positions):
+            tick_positions.append(j + offset)
+            tick_labels.append(f'{pos.capitalize()}\n({ds_label[:4]})')
+
+    ax.set_xticks(tick_positions)
+    ax.set_xticklabels(tick_labels, fontsize=9)
 
     plt.tight_layout()
     fig_path = OUTPUT_DIR / "Fig1C_pi_effect.png"

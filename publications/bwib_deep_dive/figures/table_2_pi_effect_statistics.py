@@ -33,7 +33,7 @@ def generate_table_2(data):
     """
     results = []
 
-    for dataset in ['Biology', 'Computational Biology']:
+    for dataset in ['Biology', 'Computational Biology', 'Bioinformatics']:
         dataset_data = data[data['dataset'] == dataset]
 
         for position in ['first', 'second', 'other', 'penultimate']:

@@ -8,11 +8,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- **Deep Dive Figures: Colorblind-Friendly Palette & Enhanced Overlap Analysis**
+  - Replaced black/gray/darkgray monochrome scheme with [Okabe-Ito colorblind-friendly palette](https://jfly.uni-koeln.de/color/) across all figures and tables
+    - Biology: Orange (#E69F00), Computational Biology: Blue (#0072B2), Bioinformatics: Teal (#009E73), Overlap: Pink (#CC79A7)
+    - Figure 1C now uses complementary pairs: Orange/Vermillion, Blue/Pink, Teal/Sky Blue for PI gender comparison
+  - **Figure 1A (Position Breakdown):** Expanded from 3 bars to 4-bar groups per position
+    - Added "Overlap (2+ searches)" category to show papers matching multiple search terms
+    - Reduced bar width from 0.25 to 0.20 to accommodate 4 groups
+    - Enables visualization of cross-dataset papers: 36.2% of papers are in both Biology & Bioinformatics
+  - **Search Overlap Visualization:** Replaced Venn diagram with tabular format for clarity
+    - New `table_search_overlap.py` generates Table_search_overlap (CSV & Markdown)
+    - Reveals key insight: Computational Biology is entirely a subset of Biology (0 "CompBio-only" papers)
+    - Shows P(female) statistics for first and last authors in each search overlap region
 - **Journal Impact Blog Post:** Enhanced clarity and consistency
   - Added Acknowledgments section recognizing Dr. Samantha Klasfeld and Amulya Shastry
   - Updated publication date to March 2026
   - Aligned P_female notation and probability language with Deep Dive blog post for consistency
   - Removed em-dashes throughout, rephrased using commas, semicolons, colons, and parentheses for improved readability
+
+### Added
+- **Search Overlap Analysis Table:** New `table_search_overlap.py` script generates comprehensive overlap statistics
+  - Generates `Table_search_overlap.csv` and `Table_search_overlap.md`
+  - Computes paper counts and percentages for all 7 search overlap regions
+  - Includes P(female) for first and last author positions per region
+  - Integrated into `reproduce_bonham_stefan.py` pipeline
 
 ## [0.3.0] - 2026-03-10
 

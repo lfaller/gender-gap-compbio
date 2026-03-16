@@ -17,12 +17,15 @@ This project extends the [Bonham & Stefan (2017)](https://doi.org/10.1371/journa
 
 A comprehensive analysis replicating Bonham & Stefan (2017) with 2015-2025 data. Published in the `publications/bwib_deep_dive/` directory.
 
-**Figures (fully reproducible, modular code):**
-- [Figure 1A](publications/bwib_deep_dive/figures/figure_1a_position_breakdown.py) — P(female) by author position
+**Figures & Tables (fully reproducible, modular code):**
+- [Figure 1A](publications/bwib_deep_dive/figures/figure_1a_position_breakdown.py) — P(female) by author position (4 categories: Biology, CompBio, Bioinformatics, Overlap)
 - [Figure 1B](publications/bwib_deep_dive/figures/figure_1b_temporal_trend.py) — P(female) over time
 - [Figure 1C](publications/bwib_deep_dive/figures/figure_1c_pi_effect.py) — The female PI effect
 - [Table 1](publications/bwib_deep_dive/figures/table_1_female_proportion.py) — Female proportion by position
 - [Table 2](publications/bwib_deep_dive/figures/table_2_pi_effect_statistics.py) — Female authors by PI gender
+- [Table: Search Overlap](publications/bwib_deep_dive/figures/table_search_overlap.py) — PubMed search term overlap statistics (2015–2025)
+
+**Color scheme:** All figures use the [Okabe-Ito colorblind-friendly palette](https://jfly.uni-koeln.de/color/) for accessibility.
 
 Each figure can be regenerated independently or all together. See [Deep Dive Figures README](publications/bwib_deep_dive/figures/README.md) for details.
 

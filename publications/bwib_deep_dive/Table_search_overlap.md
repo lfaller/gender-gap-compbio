@@ -1,0 +1,13 @@
+## Table. PubMed Search Term Overlap (2015-2025)
+
+| Search Term Combination | Papers | Percent | P(female) First Author | P(female) Last Author |
+| --- | --- | --- | --- | --- |
+| Biology only | 107,054 | 39.3% | 0.486 | 0.342 |
+| Computational Biology only | 0 | 0.0% | — | — |
+| Biology + Computational Biology | 3 | 0.0% | 0.333 | 0.667 |
+| Bioinformatics only | 275 | 0.1% | 0.643 | 0.441 |
+| Biology + Bioinformatics | 98,513 | 36.2% | 0.477 | 0.332 |
+| Computational Biology + Bioinformatics | 0 | 0.0% | — | — |
+| All three searches | 66,633 | 24.5% | 0.437 | 0.312 |
+| TOTAL | 272,478 | 100.0% | — | — |
+

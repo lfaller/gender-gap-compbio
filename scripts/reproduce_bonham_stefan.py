@@ -19,12 +19,18 @@ Reference: https://doi.org/10.1371/journal.pcbi.1005134
 """
 
 from pathlib import Path
+import sys
+
+# Add repo root to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 from publications.bwib_deep_dive.figures import (
     figure_1a_position_breakdown,
     figure_1b_temporal_trend,
     figure_1c_pi_effect,
     table_1_female_proportion,
     table_2_pi_effect_statistics,
+    table_search_overlap,
 )
 
 
@@ -43,6 +49,7 @@ def main():
     print("-" * 70)
     table_1_female_proportion.main()
     table_2_pi_effect_statistics.main()
+    table_search_overlap.main()
 
     # Generate Figures
     print("GENERATING FIGURES")
@@ -65,6 +72,7 @@ def main():
     print("  Tables:")
     print("    - Table1_proportion_female_authors.csv & .md")
     print("    - Table2_female_authors_with_female_pi.csv & .md")
+    print("    - Table_search_overlap.csv & .md")
     print()
     print("For individual figure regeneration, see:")
     print("  publications/bwib_deep_dive/figures/README.md")

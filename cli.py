@@ -148,13 +148,40 @@ def fetch(start_year, end_year, append):
     comp_df.to_csv(comp_file, index=False)
     print(f"✓ Saved {len(comp_df)} Computational Biology papers\n")
 
+    # Fetch Bioinformatics papers
+    print("=" * 70)
+    print(f"Fetching Bioinformatics papers ({start_year}-{end_year})...")
+    print("=" * 70)
+    bioinf_pmids = fetcher.search_bioinformatics(start_year=start_year, end_year=end_year)
+    print(f"Fetched {len(bioinf_pmids)} Bioinformatics PMIDs\n")
+
+    print("Fetching Bioinformatics paper details...")
+    bioinf_papers = fetcher.fetch_paper_details(bioinf_pmids, batch_size=500)
+    bioinf_papers = add_author_positions(bioinf_papers)
+    bioinf_df = pd.DataFrame(bioinf_papers)
+    bioinf_df["dataset"] = "Bioinformatics"
+
+    # Handle append mode
+    bioinf_file = "data/processed/pubmed_bioinformatics_2015_2025.csv"
+    if append and Path(bioinf_file).exists():
+        print(f"Loading existing Bioinformatics data...")
+        existing_bioinf = pd.read_csv(bioinf_file)
+        print(f"  Existing: {len(existing_bioinf)} papers")
+        print(f"  New: {len(bioinf_df)} papers")
+        bioinf_df = pd.concat([existing_bioinf, bioinf_df], ignore_index=True)
+        print(f"  Combined: {len(bioinf_df)} papers")
+
+    bioinf_df.to_csv(bioinf_file, index=False)
+    print(f"✓ Saved {len(bioinf_df)} Bioinformatics papers\n")
+
     print("=" * 70)
     print("✓ FETCH COMPLETE!")
     print("=" * 70)
     print(f"\nSummary:")
     print(f"  Biology:               {len(bio_df):,} papers")
     print(f"  Computational Biology: {len(comp_df):,} papers")
-    print(f"  Total:                 {len(bio_df) + len(comp_df):,} papers")
+    print(f"  Bioinformatics:        {len(bioinf_df):,} papers")
+    print(f"  Total:                 {len(bio_df) + len(comp_df) + len(bioinf_df):,} papers")
 
 
 @cli.command()

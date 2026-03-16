@@ -7,7 +7,7 @@ import sys
 import os
 
 # Add src to path
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.gender_utils import GenderInference
 from src.db_utils import GenderDatabase
@@ -32,10 +32,14 @@ print(f"✓ Loaded gender cache with {len(gi.cache)} entries\n")
 print("Loading paper data...")
 bio_df = pd.read_csv("data/processed/pubmed_biology_2015_2025.csv")
 comp_df = pd.read_csv("data/processed/pubmed_compbio_2015_2025.csv")
+bioinf_df = pd.read_csv("data/processed/pubmed_bioinformatics_2015_2025.csv")
 
-pubmed_df = pd.concat([bio_df, comp_df], ignore_index=True)
+pubmed_df = pd.concat([bio_df, comp_df, bioinf_df], ignore_index=True)
 
-print(f"✓ Loaded {len(pubmed_df)} PubMed papers\n")
+print(f"✓ Loaded {len(pubmed_df)} PubMed papers")
+print(f"  Biology:               {len(bio_df):,}")
+print(f"  Computational Biology: {len(comp_df):,}")
+print(f"  Bioinformatics:        {len(bioinf_df):,}\n")
 
 # Extract unique author names and infer gender
 print("Inferring gender for unique authors...")

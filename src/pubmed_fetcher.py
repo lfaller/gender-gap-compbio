@@ -71,6 +71,25 @@ class PubMedFetcher:
             end_year=end_year
         )
 
+    def search_bioinformatics(self, start_year: int = 2015, end_year: int = 2024) -> List[str]:
+        """
+        Search for Bioinformatics papers on PubMed.
+
+        Splits search by year to overcome 9,999 record limit per query.
+
+        Args:
+            start_year: Start year for search (default 2015)
+            end_year: End year for search (default 2024)
+
+        Returns:
+            List of PMIDs matching the query
+        """
+        return self._search_by_year_range(
+            mesh_term='bioinformatics[Mesh]',
+            start_year=start_year,
+            end_year=end_year
+        )
+
     def _search_by_year_range(self, mesh_term: str, start_year: int, end_year: int) -> List[str]:
         """
         Search for papers with automatic subdividing for years that exceed 9,999 limit.
