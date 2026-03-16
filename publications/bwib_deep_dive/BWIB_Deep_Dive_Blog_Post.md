@@ -197,17 +197,23 @@ The year-by-year trend shows consistent upward movement across all three search 
 
 These figures represent consistent progress compared to the 2015 baseline, with the trajectory accelerating notably in the latter half of the decade.
 
-Here's the year-by-year breakdown:
+Here's the year-by-year breakdown across all three search terms:
 
-| Year | Female Representation |
-|------|----------------------|
-| 2015 | 37.3% |
-| 2018 | 38.1% |
-| 2020 | 39.9% |
-| 2023 | 41.1% |
-| 2025 | 42.3% |
+| Year | Biology | Computational Biology | Bioinformatics |
+|------|---------|----------------------|----------------|
+| 2015 | 40.6%   | 38.5%                | 40.8%          |
+| 2016 | 40.9%   | 38.2%                | 40.7%          |
+| 2017 | 41.3%   | 38.8%                | 41.2%          |
+| 2018 | 41.0%   | 38.4%                | 41.1%          |
+| 2019 | 42.0%   | 39.7%                | 42.0%          |
+| 2020 | 42.7%   | 40.6%                | 42.5%          |
+| 2021 | 42.3%   | 39.4%                | 41.9%          |
+| 2022 | 41.5%   | 38.2%                | 40.8%          |
+| 2023 | 42.4%   | 40.6%                | 43.0%          |
+| 2024 | 43.5%   | 42.2%                | 44.0%          |
+| 2025 | 45.4%   | 43.7%                | 45.8%          |
 
-This is meaningful progress. But let me be precise about what it represents: the 37.3%–42.3% trend is a **weighted probability** (P_female) combining all positions together, weighted by their frequency. Figure 1A shows the **unweighted** probabilities for each individual position. We'll examine both throughout this analysis, since they tell complementary stories about representation.
+This is meaningful progress. But let me be precise about what it represents: these trends are **weighted probabilities** (P_female) combining all positions together, weighted by their frequency. Figure 1A shows the **unweighted** probabilities for each individual position. We'll examine both throughout this analysis, since they tell complementary stories about representation.
 
 ### The Persistence of Position Gaps
 
