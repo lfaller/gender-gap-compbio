@@ -93,7 +93,7 @@ A critical question in analyzing these three search terms is: how do these paper
 
 **What this tells us:**
 
-1. **Computational Biology is entirely contained within Biology.** There are zero papers tagged with "Computational Biology" alone. Of 272,478 unique papers, either zero or negligible numbers appear only in Computational Biology. Instead, CompBio papers fall into one of two categories: (a) appearing with all three search terms (66,633 papers), or (b) appearing with both Biology and Computational Biology but not Bioinformatics (3 papers, <0.1%). **This is a fundamental insight:** when we analyze "Computational Biology," we're analyzing a specialized subset of the broader biology literature, not a separate field.
+1. **Computational Biology is entirely contained within Biology.** There are zero papers tagged with "Computational Biology" alone. Of 272,478 unique papers, none are labeled exclusively as Computational Biology. Instead, CompBio papers fall into one of two categories: (a) appearing with all three search terms (66,633 papers), or (b) appearing with both Biology and Computational Biology but not Bioinformatics (3 papers, <0.1%). **This is a fundamental insight:** when we analyze "Computational Biology," we're analyzing a specialized subset of the broader biology literature, not a separate field.
 
 2. **Bioinformatics is distinct but overlapping.** Only 275 papers (0.1%) are tagged with bioinformatics alone, while 98,513 papers (36.2%) appear in both Biology and Bioinformatics. Bioinformatics has much less overlap with Computational Biology: zero papers appear in both CompBio and Bioinformatics without also appearing in Biology.
 
