@@ -62,11 +62,11 @@ This figure directly replicates Bonham & Stefan's Fig 1A, but expands the analys
 
 **Key observations:**
 
-- **Computational biology papers still show lower female representation than biology papers** across all author positions. The gap has narrowed somewhat (from 4–6 percentage points in 2017 to 3–5 percentage points in 2025), but it persists.
+- **A critical discovery:** When analyzing the PubMed search term overlap (see Table: Search Overlap below), we found that **Computational Biology is a 100% subset of Biology**: every paper tagged with "Computational Biology" also appears in the broader "Biology" search. This is why the "Computational Biology only" bars appear as zero everywhere in Figure 1A—there are literally zero papers that appear exclusively in the Computational Biology search. This means we're not analyzing a separate literature; we're analyzing a specialized subset of the biology literature.
 
-- **Bioinformatics shows an intermediate pattern.** Female representation in bioinformatics is closer to biology than to computational biology, suggesting bioinformatics may have different authorship patterns or be more integrated with traditional biology research.
+- **Computational biology papers do show lower female representation than biology papers** across all author positions, but this reflects the composition of papers in the intersection, not a separate discipline. The gap has narrowed somewhat (from 4–6 percentage points in 2017 to 3–5 percentage points in 2025), but it persists.
 
-- **A critical discovery:** When analyzing the PubMed search term overlap (see Table: Search Overlap below), we found that **Computational Biology is a 100% subset of Biology**: every paper tagged with "Computational Biology" also appears in the broader "Biology" search. This means we're not analyzing a separate literature; we're analyzing a specialized subset of the biology literature.
+- **Bioinformatics shows a distinct pattern.** Female representation in bioinformatics is closer to biology than to computational biology, suggesting bioinformatics may have different authorship patterns or be more integrated with traditional biology research. Notably, bioinformatics is not a complete subset of any other search term, indicating a more independent literature.
 
 ### Figure 1B: Temporal Trend in Female Authorship
 

@@ -105,13 +105,13 @@ def generate_figure_1a(data):
     bioinf_errs = [bioinf_errors_lower, bioinf_errors_upper]
     overlap_errs = [overlap_errors_lower, overlap_errors_upper]
 
-    ax.bar(x - 1.5*width, bio_means, width, label='Biology', color=COLORS['Biology'], alpha=0.85,
+    ax.bar(x - 1.5*width, bio_means, width, label='Biology only', color=COLORS['Biology'], alpha=0.85,
            yerr=bio_errs, capsize=5, error_kw={'elinewidth': 1})
-    ax.bar(x - 0.5*width, comp_means, width, label='Computational Biology', color=COLORS['Computational Biology'], alpha=0.85,
+    ax.bar(x - 0.5*width, comp_means, width, label='Computational Biology only', color=COLORS['Computational Biology'], alpha=0.85,
            yerr=comp_errs, capsize=5, error_kw={'elinewidth': 1})
-    ax.bar(x + 0.5*width, bioinf_means, width, label='Bioinformatics', color=COLORS['Bioinformatics'], alpha=0.85,
+    ax.bar(x + 0.5*width, bioinf_means, width, label='Bioinformatics only', color=COLORS['Bioinformatics'], alpha=0.85,
            yerr=bioinf_errs, capsize=5, error_kw={'elinewidth': 1})
-    ax.bar(x + 1.5*width, overlap_means, width, label='Overlap (2+ searches)', color=COLORS['Overlap'], alpha=0.85,
+    ax.bar(x + 1.5*width, overlap_means, width, label='Overlap (2+ MeSH terms)', color=COLORS['Overlap'], alpha=0.85,
            yerr=overlap_errs, capsize=5, error_kw={'elinewidth': 1})
 
     ax.set_xlabel('Author Position', fontsize=12, fontweight='bold')
