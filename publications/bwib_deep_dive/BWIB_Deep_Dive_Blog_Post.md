@@ -32,7 +32,7 @@ I wanted to know: have the last 10 years changed that trajectory?
 
 ## Reproducing Bonham & Stefan with 2015–2025 Data
 
-To assess progress, I replicated the Bonham & Stefan analysis exactly, using their same methodology and figures, but applied to contemporary data spanning 2015–2025. Here are the results:
+To assess progress, I replicated the Bonham & Stefan analysis, using their same methodology and figures, but applied to contemporary data spanning 2015–2025 and adding in Bioinformatics as a unique search term. Here are the results:
 
 ### Figure 1A: Female Representation by Author Position
 
