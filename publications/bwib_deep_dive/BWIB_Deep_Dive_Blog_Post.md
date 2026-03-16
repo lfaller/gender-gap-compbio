@@ -246,8 +246,6 @@ I analyzed **272,478 unique PubMed publications** (2015–2025) from three PubMe
 - Computational Biology (`"Computational Biology"[Majr]`)
 - Bioinformatics (`"bioinformatics[Mesh]"`)
 
-(Note: Unlike Bonham & Stefan, who analyzed both PubMed and arXiv, I focused on PubMed due to API limitations. Also note: MeSH indexing in my dataset transitioned from human indexers to the automated MTIX algorithm in April 2022, introducing a potential methodological discontinuity discussed in the limitations section.)
-
 **On search term overlap:** These three search terms have substantial overlap. Computational Biology is a 100% subset of the broader Biology search (every CompBio paper also appears in Biology), while Bioinformatics is more independent but still shares significant overlap with Biology. This overlap is expected: we're analyzing different scopes and perspectives on the same underlying literature, not three separate fields. The analyses presented above report results for each search term independently, which means some papers are counted in multiple categories.
 
 I identified **977,731 unique authors** and inferred gender using a hybrid two-tier approach:
