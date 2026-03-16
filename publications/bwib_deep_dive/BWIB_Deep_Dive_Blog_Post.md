@@ -244,7 +244,7 @@ This work grew out of conversations with [BWIB's Advocacy Committee](https://bos
 I analyzed **272,478 unique PubMed publications** (2015–2025) from three PubMed search terms:
 - Biology (`"Biology"[Mesh]`)
 - Computational Biology (`"Computational Biology"[Majr]`)
-- Bioinformatics (`bioinformatics[Mesh]`)
+- Bioinformatics (`"bioinformatics[Mesh]"`)
 
 (Note: Unlike Bonham & Stefan, who analyzed both PubMed and arXiv, I focused on PubMed due to API limitations. Also note: MeSH indexing in my dataset transitioned from human indexers to the automated MTIX algorithm in April 2022, introducing a potential methodological discontinuity discussed in the limitations section.)
 
