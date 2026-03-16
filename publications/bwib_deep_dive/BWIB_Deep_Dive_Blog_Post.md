@@ -62,7 +62,7 @@ This figure directly replicates Bonham & Stefan's Fig 1A, but expands the analys
 
 **Key observations:**
 
-- **A critical discovery:** When analyzing the PubMed search term overlap (see Table: Search Overlap below), we found that **Computational Biology is a 100% subset of Biology**: every paper tagged with "Computational Biology" also appears in the broader "Biology" search. This is why the "Computational Biology only" bars appear as zero everywhere in Figure 1A—there are literally zero papers that appear exclusively in the Computational Biology search. This means we're not analyzing a separate literature; we're analyzing a specialized subset of the biology literature.
+- **A critical discovery:** When analyzing the PubMed search term overlap (see Table: Search Overlap below), we found that **Computational Biology is a 100% subset of Biology**: every paper tagged with "Computational Biology" also appears in the broader "Biology" search. This is why the "Computational Biology only" bars appear as zero everywhere in Figure 1A. There are literally zero papers that appear exclusively in the Computational Biology search. This means we're not analyzing a separate literature; we're analyzing a specialized subset of the biology literature.
 
 - **Computational biology papers do show lower female representation than biology papers** across all author positions, but this reflects the composition of papers in the intersection, not a separate discipline. The gap has narrowed somewhat (from 4–6 percentage points in 2017 to 3–5 percentage points in 2025), but it persists.
 
