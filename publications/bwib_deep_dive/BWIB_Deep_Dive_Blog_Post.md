@@ -241,12 +241,14 @@ This work grew out of conversations with [BWIB's Advocacy Committee](https://bos
 
 ## How I Did This
 
-I analyzed **272,478 unique PubMed publications** (2015–2025) from three PubMed search terms:
+I analyzed PubMed publications (2015–2025) from three PubMed search terms:
 - Biology (`"Biology"[Mesh]`)
-- Computational Biology (`"Computational Biology"[Majr]`)
-- Bioinformatics (`"bioinformatics[Mesh]"`)
+- Computational Biology (`"Computational Biology"[Majr]`, major topic only)
+- Bioinformatics (`"Bioinformatics"[Majr]`, major topic only)
 
-**On search term overlap:** These three search terms have substantial overlap. Computational Biology is a 100% subset of the broader Biology search (every CompBio paper also appears in Biology), while Bioinformatics is more independent but still shares significant overlap with Biology. This overlap is expected: we're analyzing different scopes and perspectives on the same underlying literature, not three separate fields. The analyses presented above report results for each search term independently, which means some papers are counted in multiple categories.
+Following the methodological approach of Bonham & Stefan, I restricted the specialized domains (Computational Biology and Bioinformatics) to papers where these are major MeSH topics, while the broader Biology search includes all papers tagged with Biology. This provides appropriate specificity for emerging and interdisciplinary fields.
+
+**On search term overlap:** These three search terms have substantial overlap. As Bonham & Stefan first noted, Computational Biology is a 100% subset of the broader Biology search (every CompBio paper also appears in Biology). Bioinformatics is more independent but still shares significant overlap with Biology. This overlap is expected: we're analyzing different scopes and perspectives on the same underlying literature, not three separate fields. The analyses presented above report results for each search term independently, which means some papers are counted in multiple categories.
 
 | Category | Papers | % of Total |
 |---|---|---|

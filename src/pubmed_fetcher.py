@@ -76,6 +76,7 @@ class PubMedFetcher:
         Search for Bioinformatics papers on PubMed.
 
         Splits search by year to overcome 9,999 record limit per query.
+        Uses [Majr] (major term only) to match the specificity of Computational Biology.
 
         Args:
             start_year: Start year for search (default 2015)
@@ -85,7 +86,7 @@ class PubMedFetcher:
             List of PMIDs matching the query
         """
         return self._search_by_year_range(
-            mesh_term='bioinformatics[Mesh]',
+            mesh_term='"Bioinformatics"[Majr]',
             start_year=start_year,
             end_year=end_year
         )
