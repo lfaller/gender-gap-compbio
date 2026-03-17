@@ -4,7 +4,7 @@
 
 ### Data and Author Cohort
 
-We compiled a cohort of 977,731 unique authors from 274,702 publications indexed in PubMed (2015–2025) retrieved using controlled vocabulary searches: `"Biology"[Mesh]` for biology articles and `"Computational Biology"[Majr]` for computational biology articles. Publications were queried using the NCBI Entrez API and stored in a SQLite database (gender_data.db) with the following fields: PMID, publication year, journal name, and complete author lists with first and last names.
+We compiled a cohort of 977,731 unique authors from 272,478 unique publications indexed in PubMed (2015–2025) retrieved using three controlled vocabulary searches: `"Biology"[Mesh]` for biology articles, `"Computational Biology"[Majr]` for computational biology articles, and `"bioinformatics[Mesh]"` for bioinformatics articles. Publications were queried using the NCBI Entrez API and stored in a SQLite database (gender_data.db) with the following fields: PMID, publication year, journal name, and complete author lists with first and last names. Note that these three search terms overlap substantially: Computational Biology is a 100% subset of the Biology search, while Bioinformatics shares significant overlap with Biology. Each unique paper is counted only once in the total, but papers appear in multiple search-based analyses.
 
 ### Gender Classification Procedure
 
